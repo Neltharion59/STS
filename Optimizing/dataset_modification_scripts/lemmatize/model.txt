@@ -1,0 +1,1 @@
+https://github.com/jwijffels/udpipe.models.ud.2.5/blob/master/inst/udpipe-ud-2.5-191206/slovak-snk-ud-2.5-191206.udpipe
