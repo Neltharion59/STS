@@ -5,6 +5,7 @@ conf_path = os.getcwd()
 sys.path.append('D:/git/STS/Optimizing/')
 from corpora_modification_scripts.Util import get_unique_dataset_words
 from dataset_modification_scripts.dataset_pool import dataset_pool
+from resources.open_ai_api_key import open_ai_api_key
 
 from openai import OpenAI
 import json
@@ -12,7 +13,7 @@ from os import fsync
 
 openai = OpenAI(
     # This is the default and can be omitted
-    api_key="DEMO",
+    api_key=open_ai_api_key,
 )
 
 

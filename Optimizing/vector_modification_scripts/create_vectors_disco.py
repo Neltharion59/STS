@@ -25,13 +25,13 @@ def is_feature_word(word):
     return word in feature_words
 
 
-vector_file_path = '../resources/vector/hal_full.txt'
+vector_file_path = '../resources/vector/disco_raw.txt'
 
 
 def save_vectors(vectors):
     new_lines = []
     for vector_word in vector_words:
-        new_line = vector_word + '\t' + ','.join([str(vectors[vector_word][feature_word]) for feature_word in feature_words]) + '\n'
+        new_line = vector_word + '\t' + ','.join([str(x) for x in reduce(lambda a,b: a+b, [vectors[vector_word][feature_word] for feature_word in feature_words])]) + '\n'
         new_lines.append(new_line)
 
     with open(vector_file_path, 'w+', encoding='utf-8') as vector_file:
@@ -40,18 +40,25 @@ def save_vectors(vectors):
         fsync(vector_file)
 
 
+def chunk_array(array, chunk_size):
+    if len(array) % chunk_size != 0:
+        raise Exception
+
+    for i in range(len(array)//chunk_size):
+        yield array[chunk_size * i: chunk_size * (i+1)]
+
 def init_vectors():
     try:
         with open(vector_file_path, 'r', encoding='utf-8') as vector_file:
             lines = vector_file.readlines()
     except FileNotFoundError:
-        return {vector_word: {feature_word: 0 for feature_word in feature_words} for vector_word in vector_words}
+        return {vector_word: {feature_word: [0] * window_radius for feature_word in feature_words} for vector_word in vector_words}
 
     initialized_vectors = {}
     for line in lines:
         tokens = line.split('\t')
         vector_word = tokens[0]
-        vector = {feature_word:int(value) for feature_word, value in zip(feature_words, tokens[1].split(','))}
+        vector = {feature_word:values for feature_word, values in zip(feature_words, chunk_array([int(x) for x in tokens[1].split(',')], window_radius))}
         initialized_vectors[vector_word] = vector
 
     return initialized_vectors
@@ -65,7 +72,7 @@ corpora_directory_path = './../resources/corpora/processed/'
 
 corpus_file_name_pattern = re.compile("oscarsk_meta_part_[0-9]+_sk_lemma.jsonl")
 input_corpus_files = sorted([x for x in listdir(corpora_directory_path) if isfile(join(corpora_directory_path, x)) and corpus_file_name_pattern.match(x)], key=lambda x: int(get_corpus_file_id(x)))
-corpus_progress_track_file_name_pattern = "progress_vector_hal_construction_oscarsk_{}"
+corpus_progress_track_file_name_pattern = "progress_vector_disco_construction_oscarsk_{}"
 
 vectors = init_vectors()
 
@@ -106,9 +113,9 @@ for input_corpus_file in input_corpus_files:
                     if not is_feature_word(tokens[j]):
                         continue
 
-                    increment = frame_size - abs(i - j)
-                    vectors[tokens[i]][tokens[j]] = vectors[tokens[i]][tokens[j]] + increment
-
+                    distance = abs(i - j)
+                    array_index = distance - 1
+                    vectors[tokens[i]][tokens[j]][array_index] = vectors[tokens[i]][tokens[j]][array_index] + 1
 
         print('---saving---')
         save_vectors(vectors)

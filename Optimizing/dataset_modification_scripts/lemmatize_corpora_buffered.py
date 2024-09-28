@@ -1,15 +1,21 @@
 # Runnable script lematizing corpora, creating new versions of corpora (does not overwrite original corpuss)
+
+import sys
+import os
+conf_path = os.getcwd()
+sys.path.append('D:/git/STS/Optimizing/')
+
 import concurrent
 import os
 from os import listdir
 from os.path import isfile, join
 import re
 import sys
-from Optimizing.dataset_modification_scripts.lemmatize.lemmatizer_wrapper import Lemmatizer
-from playsound3 import playsound
+from dataset_modification_scripts.lemmatize.lemmatizer_wrapper import Leprogress_matrix_construction_oscarsk_
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
 lemmatizer = Lemmatizer()
+
 
 # Lemmatize given text using lemmatizer API
 # Params: str

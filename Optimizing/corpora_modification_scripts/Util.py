@@ -24,3 +24,19 @@ def get_unique_dataset_words():
     return all_words
 
 
+def get_feature_words():
+    feature_word_file = './../resources/feature_words.txt'
+    with open(feature_word_file, 'r', encoding='utf-8') as file:
+        lines = file.readlines()
+    return [line.split()[0] for line in lines if len(line.split()[0]) > 1]
+
+
+def get_stop_words():
+    stop_word_file = './../resources/stop_words.txt'
+    with open(stop_word_file, 'r', encoding='utf-8') as file:
+        lines = file.readlines()
+    return lines[0].split()
+
+
+def get_non_stop_feature_words():
+    return list(set(get_feature_words()) - set(get_stop_words()))
