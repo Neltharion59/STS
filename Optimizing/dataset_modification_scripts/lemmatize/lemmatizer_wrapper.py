@@ -1,10 +1,11 @@
 import ufal.udpipe
 from functools import reduce
-model_path = './lemmatize/slovak-snk-ud-2.5-191206.udpipe'
+model_path_suffix = './lemmatize/slovak-snk-ud-2.5-191206.udpipe'
 
 class Lemmatizer:
-    def __init__(self):
-        self.lemmatization_model = self.__load_model(model_path)
+    def __init__(self, model_pat_prefix=''):
+        self.model_path = model_pat_prefix + model_path_suffix
+        self.lemmatization_model = self.__load_model(self.model_path)
 
     def lemmatize(self, text):
         sentences = self.__process(self.lemmatization_model, text)
