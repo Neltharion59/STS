@@ -1,6 +1,7 @@
 #from googlesearch import search
-from Optimizing.dataset_modification_scripts.lemmatize.lemmatizer_wrapper import Lemmatizer
 import json, re, wikipedia
+from math import log2
+from Optimizing.dataset_modification_scripts.lemmatize.lemmatizer_wrapper import Lemmatizer
 
 word_pattern = re.compile('[^A-Za-z0-9áäčďéíľĺňóôŕřšśťúýźžÁÄČĎÉÍĽĹŇÓÔŔŘŠŚŤÚÝŹŽ]+')
 wikipedia.set_lang("sk")
@@ -38,4 +39,36 @@ def get_word_co_occurences():
     return json.loads(raw_json)
 
 
-def get_word_occurence_across_paragraphs()
+def get_word_occurences_across_paragraphs():
+    with open('../resources/vector/esa_paragraphs_occured_in_counts.txt', 'r', encoding='utf-8') as occ_file:
+        occurences_temp = occ_file.readlines()
+    occurences = {}
+    for line in occurences_temp:
+        occurences[line.split(' ')[0]] = int(line.split(' ')[1])
+
+    return occurences
+word_occurences_across_paragraphs = get_word_occurences_across_paragraphs()
+
+
+def get_corpora_line_count():
+    with open('../resources/corpora_line_count.txt', 'r', encoding='utf-8') as corpus_line_count_file:
+        line_count = int(corpus_line_count_file.read())
+    return line_count
+corpora_line_count = get_corpora_line_count()
+
+
+def tf_idf(word, vector):
+    if word not in word_occurences_across_paragraphs:
+        return 0
+
+    return tf(word, vector) * idf(word)
+
+
+def tf(word, vector):
+    return len([w for w in vector if v == word])
+
+
+def idf(word):
+    N = corpora_line_count
+    Nt = word_occurences_across_paragraphs[word]
+    return log2(N/Nt)
