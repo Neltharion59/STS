@@ -16,7 +16,14 @@ def get_wiki_article(word):
     #search_results = [x for x in search_results if not "wikipedia" in search_results]
     lemmatized_word = lemmatizer.lemmatize(word)
     search_results = wikipedia.search(lemmatized_word)
-    content = wikipedia.page(search_results[0]).content
+
+    try:
+        wiki_page = wikipedia.page(search_results[0])
+    except wikipedia.DisambiguationError as e:
+        s = random.choice(e.options)
+        wiki_page = wikipedia.page(s)
+
+    content = wiki_page.content
     content_lines = content.split('\n')
     content_lines = [line for line in content_lines if len(line) != 0 and "==" not in line]
     raw_text = word_pattern.sub(' ', ' '.join(content_lines))
