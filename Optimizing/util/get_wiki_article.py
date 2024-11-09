@@ -11,15 +11,17 @@ wikipedia.set_lang("sk")
 lemmatizer = Lemmatizer('../dataset_modification_scripts/')
 
 
-def disambiguate(result):
+def disambiguate(result, known_options=[]):
     try:
         wiki_page = wikipedia.page(result)
     except (wikipedia.DisambiguationError, wikipedia.exceptions.DisambiguationError) as e:
-        options = [x for x in e.options if '[' not in x and '↑' not in x]
+        options = [x for x in e.options if '[' not in x and '↑' not in x and x not in known_options]
+        for x in options:
+            known_options.append(x)
         random.shuffle(options)
         for i in range(len(options)):
             try:
-                wiki_page = disambiguate(options[i])
+                wiki_page = disambiguate(options[i], known_options)
                 return wiki_page
             except wikipedia.exceptions.PageError:
                 pass
