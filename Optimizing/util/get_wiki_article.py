@@ -67,7 +67,7 @@ def tf_idf(word, vector):
 
 
 def tf(word, vector):
-    return len([w for w in vector if v == word])
+    return len([w for w in vector if w == word])
 
 
 def idf(word):
