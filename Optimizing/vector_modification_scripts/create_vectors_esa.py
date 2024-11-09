@@ -1,5 +1,5 @@
 import sys
-sys.path.append('D:/git/STS/Optimizing/')
+sys.path.append('C:/git/STS/Optimizing/')
 from corpora_modification_scripts.Util import split_to_words, get_unique_dataset_words
 from util.get_wiki_article import get_wiki_article, tf_idf
 
