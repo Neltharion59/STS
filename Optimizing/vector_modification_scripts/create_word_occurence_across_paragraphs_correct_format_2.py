@@ -6,9 +6,8 @@ with open('../resources/vector/esa_paragraphs_occured_in_counts.txt', 'r', encod
     lines = store_file.readlines()
 
 vector_words = [word for word in get_unique_dataset_words()]
-for word in vector_words:
-    print(word)
-exit(0)
+for i in len(vector_words):
+    lines[i] = vector_words[i][0] + lines[i]
 
 for line in lines:
     print(line)
