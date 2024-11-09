@@ -1,3 +1,5 @@
+import os
+
 with open('../resources/vector/esa_paragraphs_occured_in_counts.txt', 'r', encoding='utf-8') as store_file:
     file_content = store_file.read()
 
