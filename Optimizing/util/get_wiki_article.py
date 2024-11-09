@@ -15,8 +15,14 @@ def disambiguate(result):
     try:
         wiki_page = wikipedia.page(result)
     except (wikipedia.DisambiguationError, wikipedia.exceptions.DisambiguationError) as e:
-        s = random.choice([x for x in e.options if '[' not in x and '↑' not in x])
-        wiki_page = disambiguate(s)
+        options = [x for x in e.options if '[' not in x and '↑' not in x]
+        random.shuffle(options)
+        for i in range(len(options)):
+            try:
+                wiki_page = disambiguate(options[i])
+                return wiki_page
+            except wikipedia.exceptions.PageError:
+                pass
     except IndexError as ie:
         wiki_page = None
 
