@@ -11,19 +11,24 @@ wikipedia.set_lang("sk")
 lemmatizer = Lemmatizer('../dataset_modification_scripts/')
 
 
+def disambiguate(result):
+    try:
+        wiki_page = wikipedia.page(result)
+    except wikipedia.DisambiguationError as e:
+        s = random.choice(e.options)
+        wiki_page = disambiguate(s)
+    except IndexError as ie:
+        wiki_page = []
+
+    return wiki_page
+
 def get_wiki_article(word):
     #search_results = list(search(word + "wikipedia sk"))
     #search_results = [x for x in search_results if not "wikipedia" in search_results]
     lemmatized_word = lemmatizer.lemmatize(word)
     search_results = wikipedia.search(lemmatized_word)
 
-    try:
-        wiki_page = wikipedia.page(search_results[0])
-    except wikipedia.DisambiguationError as e:
-        s = random.choice(e.options)
-        wiki_page = wikipedia.page(s)
-    except IndexError as ie:
-        return []
+    wiki_page = [] if len(search_results) == 0 else disambiguate(search_results[0])
 
     content = wiki_page.content
     content_lines = content.split('\n')
