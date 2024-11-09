@@ -10,7 +10,7 @@ corpus_file_paths = [x for x in listdir(corpora_directory_path) if isfile(join(c
 
 acc = 0
 for corpus_file_path in corpus_file_paths:
-    with open(corpus_file_path, 'r', encoding='utf-8') as corpus_file:
+    with open(join(corpora_directory_path, corpus_file_path), 'r', encoding='utf-8') as corpus_file:
         acc = acc + len(list(corpus_file.readlines()))
 
     with open(target_file_path, 'w+', encoding='utf-8') as target_file:
