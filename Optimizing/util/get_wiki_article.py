@@ -22,6 +22,8 @@ def get_wiki_article(word):
     except wikipedia.DisambiguationError as e:
         s = random.choice(e.options)
         wiki_page = wikipedia.page(s)
+    except IndexError as ie:
+        return []
 
     content = wiki_page.content
     content_lines = content.split('\n')
