@@ -21,7 +21,8 @@ for i in range(starting_word, len(vector_words)):
 
     wiki_words = get_wiki_article(word)
     wiki_words_tf_idf = [str(round(tf_idf(wiki_word, wiki_words), 2)) for wiki_word in wiki_words]
-    records.append(f'{word} {','.join(wiki_words_tf_idf)}')
+    values = ','.join(wiki_words_tf_idf)
+    records.append(f'{word} {values}')
 
     if i > 0 and i % 100 == 0:
         print(f'Processing {counter}/{vector_words_count}. {counter/vector_words_count * 100}%')
@@ -32,19 +33,19 @@ for i in range(starting_word, len(vector_words)):
             fsync(progress_file)
 
         with open(vector_file_path, 'a+', encoding='utf-8') as vector_file:
-            vector_file.writelines(records)
+            vector_file.write('\n'.join(records))
             vector_file.flush()
             fsync(vector_file)
 
         records = []
 
+if len(records) > 0:
+    with open(vector_file_path, 'a+', encoding='utf-8') as vector_file:
+        vector_file.write('\n'.join(records))
+        vector_file.flush()
+        fsync(vector_file)
+
 with open(progress_file_path, 'w+', encoding='utf-8') as progress_file:
     progress_file.write(str(vector_words_count))
     progress_file.flush()
     fsync(progress_file)
-
-if len(records) > 0:
-    with open(vector_file_path, 'a+', encoding='utf-8') as vector_file:
-        vector_file.writelines(records)
-        vector_file.flush()
-        fsync(vector_file)

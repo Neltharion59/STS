@@ -6,7 +6,7 @@ with open('../resources/vector/esa_paragraphs_occured_in_counts.txt', 'r', encod
     lines = store_file.readlines()
 
 vector_words = [word for word in get_unique_dataset_words()]
-for i in range(len(vector_words)):
+for i in range(1, len(vector_words)):
     lines[i] = vector_words[i][0] + lines[i]
 
 with open('../resources/vector/esa_paragraphs_occured_in_counts.txt', 'w', encoding='utf-8') as store_file:
