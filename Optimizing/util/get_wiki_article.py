@@ -27,7 +27,7 @@ def disambiguate(result, known_options=[]):
                 return wiki_page
             except wikipedia.exceptions.PageError:
                 pass
-    except IndexError as ie:
+    except (IndexError, wikipedia.exceptions.PageError) as ie:
         wiki_page = None
 
     return wiki_page
