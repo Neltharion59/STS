@@ -19,12 +19,12 @@ for character in file_content:
         if state == 'in_value':
             state = 'in_word'
             lines.append(f'{current_word} {current_value}\n')
-            current_word = ''
+            current_word = character
             current_value = ''
         elif state == 'in_word':
             current_word = current_word + character
         else:
-            raise Exception
+            exit(1)
 
 if current_word != '':
     if current_value == '':
