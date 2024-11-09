@@ -1,7 +1,9 @@
 #from googlesearch import search
+import sys
+sys.path.append('C:/git/STS/Optimizing/')
 import json, re, wikipedia
 from math import log2
-from Optimizing.dataset_modification_scripts.lemmatize.lemmatizer_wrapper import Lemmatizer
+from dataset_modification_scripts.lemmatize.lemmatizer_wrapper import Lemmatizer
 
 word_pattern = re.compile('[^A-Za-z0-9áäčďéíľĺňóôŕřšśťúýźžÁÄČĎÉÍĽĹŇÓÔŔŘŠŚŤÚÝŹŽ]+')
 wikipedia.set_lang("sk")
