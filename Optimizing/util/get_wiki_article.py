@@ -12,6 +12,8 @@ lemmatizer = Lemmatizer('../dataset_modification_scripts/')
 
 
 def disambiguate(result, known_options=[]):
+    wiki_page = None
+
     try:
         wiki_page = wikipedia.page(result)
     except (wikipedia.DisambiguationError, wikipedia.exceptions.DisambiguationError) as e:
