@@ -15,7 +15,7 @@ for corpus_file_path in corpus_file_paths:
 
     with open(target_file_path, 'w+', encoding='utf-8') as target_file:
         target_file.write(str(acc))
-        progress_file.flush()
-        fsync(progress_file)
+        target_file.flush()
+        fsync(target_file)
 
 
