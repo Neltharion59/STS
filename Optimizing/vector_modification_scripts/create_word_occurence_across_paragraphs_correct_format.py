@@ -28,7 +28,7 @@ if current_word != '':
     if current_value == '':
         current_value = '0'
 
-    lines.append(current_word, current_value)
+    lines.append(f'{current_word} {current_value}\n')
 
 with open('../resources/vector/esa_paragraphs_occured_in_counts.txt', 'w', encoding='utf-8') as store_file:
     store_file.writelines(lines)
