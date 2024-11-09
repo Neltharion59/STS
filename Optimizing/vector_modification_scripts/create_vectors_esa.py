@@ -24,7 +24,7 @@ for i in range(starting_word, len(vector_words)):
     values = ','.join(wiki_words_tf_idf)
     records.append(f'{word} {values}')
 
-    if i > 0 and i % 100 == 0:
+    if i > 0 and i % 10 == 0:
         print(f'Processing {counter}/{vector_words_count}. {counter/vector_words_count * 100}%')
 
         with open(progress_file_path, 'w+', encoding='utf-8') as progress_file:

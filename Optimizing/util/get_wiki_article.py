@@ -16,7 +16,6 @@ def get_wiki_article(word):
     #search_results = [x for x in search_results if not "wikipedia" in search_results]
     lemmatized_word = lemmatizer.lemmatize(word)
     search_results = wikipedia.search(lemmatized_word)
-    print(word, ' ', lemmatized_word, ' ', search_results)
     content = wikipedia.page(search_results[0]).content
     content_lines = content.split('\n')
     content_lines = [line for line in content_lines if len(line) != 0 and "==" not in line]
