@@ -4,7 +4,7 @@ from corpora_modification_scripts.Util import split_to_words, get_unique_dataset
 from util.get_wiki_article import get_wiki_article, tf_idf
 from os import fsync
 
-vector_file_path = '../resources/vector/vectors_esa_full.txt'
+vector_file_path = '../resources/vector/esa_full.txt'
 progress_file_path = '../resources/temp/progress_esa_vectors_full.txt'
 
 vector_words = [word for word in get_unique_dataset_words()]
