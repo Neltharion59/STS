@@ -1,7 +1,7 @@
 #from googlesearch import search
 import sys
 sys.path.append('C:/git/STS/Optimizing/')
-import json, re, wikipedia
+import json, re, wikipedia, random
 from math import log2
 from dataset_modification_scripts.lemmatize.lemmatizer_wrapper import Lemmatizer
 
