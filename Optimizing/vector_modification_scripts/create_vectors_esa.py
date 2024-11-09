@@ -25,7 +25,7 @@ for i in range(starting_word, len(vector_words)):
     records.append(f'{word} {values}')
 
     if i > 0 and i % 10 == 0:
-        print(f'Processing {counter}/{vector_words_count}. {counter/vector_words_count * 100}%')
+        print(f'Processing {i}/{vector_words_count}. {i/vector_words_count * 100}%')
 
         with open(progress_file_path, 'w+', encoding='utf-8') as progress_file:
             progress_file.write(str(i))
