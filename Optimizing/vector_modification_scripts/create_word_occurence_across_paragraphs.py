@@ -31,7 +31,7 @@ for batch_id in batch_ids:
         i = i + 1
 
     with open('../resources/vector/esa_paragraphs_occured_in_counts.txt', 'a+', encoding='utf-8') as store_file:
-        store_file.writelines(paragraphs_occured_in_counts)
+        store_file.write('\n'.join(paragraphs_occured_in_counts))
         store_file.flush()
         os.fsync(store_file)
 
