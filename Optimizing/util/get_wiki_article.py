@@ -14,7 +14,7 @@ lemmatizer = Lemmatizer('../dataset_modification_scripts/')
 def disambiguate(result):
     try:
         wiki_page = wikipedia.page(result)
-    except wikipedia.DisambiguationError | wikipedia.exceptions.DisambiguationError as e:
+    except (wikipedia.DisambiguationError, wikipedia.exceptions.DisambiguationError) as e:
         s = random.choice([x for x in e.options if '[' not in x and '↑' not in x])
         wiki_page = disambiguate(s)
     except IndexError as ie:
