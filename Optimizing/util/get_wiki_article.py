@@ -18,7 +18,7 @@ def disambiguate(result):
         s = random.choice(e.options)
         wiki_page = disambiguate(s)
     except IndexError as ie:
-        wiki_page = []
+        wiki_page = None
 
     return wiki_page
 
@@ -28,7 +28,10 @@ def get_wiki_article(word):
     lemmatized_word = lemmatizer.lemmatize(word)
     search_results = wikipedia.search(lemmatized_word)
 
-    wiki_page = [] if len(search_results) == 0 else disambiguate(search_results[0])
+    wiki_page = None if len(search_results) == 0 else disambiguate(search_results[0])
+
+    if wiki_page is None:
+        return []
 
     content = wiki_page.content
     content_lines = content.split('\n')
