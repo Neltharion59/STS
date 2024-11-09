@@ -1,4 +1,4 @@
-import os
+import os, sys
 sys.path.append('C:/git/STS/Optimizing/')
 from corpora_modification_scripts.Util import get_unique_dataset_words
 
