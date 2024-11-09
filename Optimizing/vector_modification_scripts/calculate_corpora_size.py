@@ -1,3 +1,4 @@
+import re
 from os import listdir, fsync
 from os.path import isfile, join
 
