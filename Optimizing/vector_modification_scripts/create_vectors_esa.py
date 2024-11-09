@@ -2,6 +2,7 @@ import sys
 sys.path.append('C:/git/STS/Optimizing/')
 from corpora_modification_scripts.Util import split_to_words, get_unique_dataset_words
 from util.get_wiki_article import get_wiki_article, tf_idf
+from os import fsync
 
 vector_file_path = '../resources/vectors/vectors_esa_full.txt'
 progress_file_path = '../resources/temp/progress_esa_vectors_full.txt'
