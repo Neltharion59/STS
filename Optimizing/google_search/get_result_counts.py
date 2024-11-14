@@ -1,6 +1,8 @@
 search_query_near = "{0} NEAR:10 {1} language:sk loc:sk"
 
 from json import loads, dumps
+from time import sleep
+from random import randint
 
 import os
 root_path = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
@@ -39,6 +41,7 @@ def calc_single_words():
 
     for i in range(start_index, len(vector_words)):
         word = vector_words[i]
+        sleep(randint(50, 1050)/1000)
         result_count = search_result_count(word)
         result_counts[word] = result_count
 
