@@ -39,6 +39,7 @@ def calc_single_words():
     except FileNotFoundError:
         result_counts = {}
 
+    print("Starting to calc for single words")
     for i in range(start_index, len(vector_words)):
         word = vector_words[i]
         sleep(randint(50, 1050)/1000)
@@ -46,6 +47,7 @@ def calc_single_words():
         result_counts[word] = result_count
 
         if i % 20 == 0:
+            print(f'Calc single words. {i}/{len(vector_words)}. {i/len(vector_words) * 100}%')
             data = dumps(result_counts)
             write(subpath_data_single_words, data)
             write(subpath_progress_single_words, str(i))
