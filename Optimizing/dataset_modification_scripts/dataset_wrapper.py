@@ -2,10 +2,13 @@
 
 import json
 import os
+root_path = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
+import sys
+sys.path.append(root_path)
 
 # Prepare paths to work with in this scripts
-input_folder = "./../resources/datasets/sts_processed/"
-output_folder = "./../resources/datasets/sts_method_values/"
+input_folder = os.path.join(root_path, "resources/datasets/sts_processed/")
+output_folder = os.path.join(root_path, "resources/datasets/sts_method_values/")
 
 # Define name of gold standard so that this string is only hardcoded in one place
 gold_standard_name = "gold_standard"
