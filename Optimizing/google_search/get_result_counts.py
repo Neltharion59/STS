@@ -35,7 +35,10 @@ def calc_single_words():
     for i in range(0, len(vector_words)):
         word = vector_words[i]
 
+        print(f'Calc single words: \'{word}\'. {i}/{len(vector_words)}. {i/len(vector_words) * 100}%')
+
         if word in result_counts and result_counts[word] != 0:
+            print('Already owned')
             continue
 
         sleep(randint(50, 1050)/1000)
@@ -43,13 +46,11 @@ def calc_single_words():
         result_counts[word] = result_count
 
         if i % 20 == 0:
-            print(f'Calc single words. {i}/{len(vector_words)}. {i/len(vector_words) * 100}%')
             data = dumps(result_counts)
             write(subpath_data_single_words, data)
 
-    if len(result_counts.keys()) > 0:
-        data = dumps(result_counts)
-        write(subpath_data_single_words, data)
+    data = dumps(result_counts)
+    write(subpath_data_single_words, data)
 
 
 def calc_word_couples():
