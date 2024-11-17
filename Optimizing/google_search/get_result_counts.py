@@ -27,21 +27,17 @@ vector_words = [word for word in get_unique_dataset_words() if word not in stop_
 
 def calc_single_words():
     try:
-        start_index = int(read(subpath_progress_single_words))
-    except FileNotFoundError:
-        start_index = 0
-
-    if start_index == -1:
-        return
-
-    try:
         result_counts = loads(read(subpath_data_single_words))
     except FileNotFoundError:
         result_counts = {}
 
     print("Starting to calc for single words")
-    for i in range(start_index, len(vector_words)):
+    for i in range(0, len(vector_words)):
         word = vector_words[i]
+
+        if word in result_counts and result_counts[word] != 0:
+            continue
+
         sleep(randint(50, 1050)/1000)
         result_count = search_result_count(word)
         result_counts[word] = result_count
@@ -50,12 +46,10 @@ def calc_single_words():
             print(f'Calc single words. {i}/{len(vector_words)}. {i/len(vector_words) * 100}%')
             data = dumps(result_counts)
             write(subpath_data_single_words, data)
-            write(subpath_progress_single_words, str(i))
 
     if len(result_counts.keys()) > 0:
         data = dumps(result_counts)
         write(subpath_data_single_words, data)
-    write(subpath_progress_single_words, '-1')
 
 
 def calc_word_couples():
