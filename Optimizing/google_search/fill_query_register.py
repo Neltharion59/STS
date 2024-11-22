@@ -1,7 +1,6 @@
 search_query_word = "{0} language:sk loc:sk"
 search_query_near = "{0} NEAR:10 {1} language:sk loc:sk"
 
-from json import loads, dumps
 from time import sleep
 from random import randint
 
@@ -12,7 +11,6 @@ sys.path.append(root_path)
 from util.bing import search_result_count
 from util.search_register import SearchRegister
 from corpora_modification_scripts.Util import split_to_words, get_unique_dataset_words
-from util.file_handling import read, write
 from dataset_modification_scripts.dataset_pool import dataset_pool
 
 subpath_data_single_words = 'resources/search_bing_single_words.txt'
@@ -27,9 +25,9 @@ vector_words = [word for word in get_unique_dataset_words() if word not in stop_
 
 
 def calc_single_words():
+    print("Starting to calc for single words")
     register = SearchRegister('bing_single_words')
 
-    print("Starting to calc for single words")
     for i in range(0, len(vector_words)):
         word = vector_words[i]
         query = search_query_word.format(word)
@@ -41,8 +39,10 @@ def calc_single_words():
         result_count = search_result_count(word)
         register.add(word, result_count)
 
-        if i % 100 == 0:
-            print(f'Calc single words: \'{word}\'. {i}/{len(vector_words)}. {i / len(vector_words) * 100}%')
+        print(f'Calc single words: \'{word}\'. {i}/{len(vector_words)}. {i / len(vector_words) * 100}%')
+
+        if i % 10 == 0:
+            print('Persisting')
             register.persist()
 
     register.persist()
@@ -50,11 +50,10 @@ def calc_single_words():
 
 
 def calc_word_couples():
+    print("Starting to calc for word couples")
     register = SearchRegister('bing_word_couples')
 
     for dataset in dataset_pool['lemma']:
-        subpath_data_word_couples = subpath_data_word_couples_pattern.format(dataset.name)
-
         sentences1, sentences2 = dataset.load_dataset()
 
         for i in range(0, len(sentences1)):
@@ -90,6 +89,8 @@ def calc_word_couples():
                     register.add(query, result_count)
 
             register.persist()
+
+    print("Finished calcing for word couples")
 
 
 calc_single_words()
