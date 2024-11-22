@@ -45,5 +45,4 @@ def search_result_count(search_query, tries=10):
         except Exception as e:
             pass
 
-    print('Max retries')
-    return 0
+    return -1
