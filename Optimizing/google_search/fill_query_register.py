@@ -36,10 +36,10 @@ def calc_single_words():
             continue
 
         sleep(randint(50, 1050)/1000)
-        result_count = search_result_count(word)
-        register.add(word, result_count)
+        result_count = search_result_count(query)
+        register.add(query, result_count)
 
-        print(f'Calc single words: \'{word}\'. {i}/{len(vector_words)}. {i / len(vector_words) * 100}%')
+        print(f'Calc single words: \'{query}\'. {i}/{len(vector_words)}. {i / len(vector_words) * 100}%')
 
         if i % 10 == 0:
             print('Persisting')

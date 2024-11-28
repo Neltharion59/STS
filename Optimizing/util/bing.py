@@ -1,48 +1,32 @@
 import requests
-from bs4 import BeautifulSoup
-from html import escape
-import re
-from time import sleep
-from random import randint
+
+import os
+root_path = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
+import sys
+sys.path.append(root_path)
+from util.file_handling import read
+
+token_path = os.path.join(root_path, 'resources', 'tokens', 'bing.txt')
+token = read(token_path)
+url = "https://api.bing.microsoft.com/v7.0/search"
 
 
-def search_result_count(search_query, tries=10):
-    for i in range(10):
-        try:
-            encoded_arg = escape(search_query)
+def search_result_count(search_query):
+    # Headers with API key
+    headers = {"Ocp-Apim-Subscription-Key": token}
 
-            custom_user_agent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:132.0) Gecko/20100101 Firefox/132.0"
+    # Parameters with the query
+    params = {"q": search_query}
 
-            r = requests.get('https://www.bing.com/search',
-                             params={'q': encoded_arg},
-                             headers={"User-Agent": custom_user_agent}
-                             )
-            soup = BeautifulSoup(r.text, features="html.parser")
-            element = soup.find('span', {'class': 'sb_count'})
+    # Send the GET request
+    response = requests.get(url, headers=headers, params=params)
 
-            # This worked first time
-            if element is not None:
-                element_text = element.text
-                result_count_s = re.sub('[^0-9]', '', element_text)
-                result_count = int(result_count_s)
-                return result_count
-
-            # There might be advertisements. Let us try the next page
-            r = requests.get('https://www.bing.com/search',
-                             params={'q': encoded_arg, 'first': '11'},
-                             headers={"User-Agent": custom_user_agent}
-                             )
-            soup = BeautifulSoup(r.text, features="html.parser")
-            element = soup.find('span', {'class': 'sb_count'})
-
-            if element is not None:
-                element_text = element.text
-                result_count_s = re.sub('[0-9]+-[0-9]+', '', element_text)
-                result_count_s = re.sub('[^0-9]', '', result_count_s)
-                result_count = int(result_count_s)
-                return result_count
-
-        except Exception as e:
-            pass
-
-    return -1
+    if response.status_code == 200:
+        # Parse the JSON response
+        data = response.json()
+        # Extract the total number of estimated results
+        return data.get("webPages", {}).get("totalEstimatedMatches", 0)
+    else:
+        # Handle errors
+        print(f"Error: {response.status_code}, {response.text}")
+        return -1
