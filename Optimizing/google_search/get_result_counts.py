@@ -1,3 +1,4 @@
+search_query_word = "{0} language:sk loc:sk"
 search_query_near = "{0} NEAR:10 {1} language:sk loc:sk"
 
 from json import loads, dumps
@@ -34,13 +35,15 @@ def calc_single_words():
     for i in range(0, len(vector_words)):
         word = vector_words[i]
 
-        if word in result_counts and result_counts[word] != 0:
+        if word in result_counts and result_counts[word] != -1:
             if i % 100 == 0:
                 print(f'Already owned: \'{word}\'. {i}/{len(vector_words)}. {i / len(vector_words) * 100}%')
             continue
 
         sleep(randint(50, 1050)/1000)
-        result_count = search_result_count(word)
+
+        query = search_query_word.format(word)
+        result_count = search_result_count(query)
         result_counts[word] = result_count
 
         if i % 20 == 0:
