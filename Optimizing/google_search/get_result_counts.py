@@ -67,7 +67,7 @@ def calc_word_couples():
         sentences1, sentences2 = dataset.load_dataset()
 
         for i in range(0, len(sentences1)):
-            print(f'Calc sentences word couples: {i}/{len(vector_words)}. {i / len(vector_words) * 100}%')
+            print(f'Calc sentences word couples: {i}/{len(sentences1)}. {i / len(sentences1) * 100}%')
 
             words1 = split_to_words(sentences1[i])
             words2 = split_to_words(sentences2[i])
@@ -92,7 +92,7 @@ def calc_word_couples():
 
                     if w1 not in result_counts:
                         result_counts[w1] = {}
-                    if w2 in result_counts[w1] and result_counts[w1][w2] != 0:
+                    if w2 in result_counts[w1] and result_counts[w1][w2] != -1:
                         continue
 
                     search_query = search_query_near.format(w1, w2)
