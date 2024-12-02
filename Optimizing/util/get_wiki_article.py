@@ -11,34 +11,26 @@ wikipedia.set_lang("sk")
 lemmatizer = Lemmatizer('../dataset_modification_scripts/')
 
 
-def disambiguate(result, known_options=[]):
+def disambiguate(word):
     wiki_page = None
+    search_results = wikipedia.search(word)
+    matching_results = [x for x in search_results if x.lower() == word.lower()]
 
-    try:
-        wiki_page = wikipedia.page(result)
-    except (wikipedia.DisambiguationError, wikipedia.exceptions.DisambiguationError) as e:
-        options = [x for x in e.options if '[' not in x and '↑' not in x and x not in known_options]
-        for x in options:
-            known_options.append(x)
-        random.shuffle(options)
-        for i in range(len(options)):
-            try:
-                wiki_page = disambiguate(options[i], known_options)
-                return wiki_page
-            except wikipedia.exceptions.PageError:
-                pass
-    except (IndexError, wikipedia.exceptions.PageError) as ie:
-        wiki_page = None
+    if len(matching_results) == 1:
+        matching_result = matching_results[0]
+        try:
+            wiki_page = wikipedia.page(matching_result)
+            return wiki_page
+        except Exception as e:
+            pass
 
-    return wiki_page
+    return None
 
 def get_wiki_article(word):
     #search_results = list(search(word + "wikipedia sk"))
     #search_results = [x for x in search_results if not "wikipedia" in search_results]
     lemmatized_word = lemmatizer.lemmatize(word)
-    search_results = wikipedia.search(lemmatized_word)
-
-    wiki_page = None if len(search_results) == 0 else disambiguate(search_results[0])
+    wiki_page = disambiguate(lemmatized_word)
 
     if wiki_page is None:
         return []
