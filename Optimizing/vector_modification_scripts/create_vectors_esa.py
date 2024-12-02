@@ -8,7 +8,7 @@ from util.file_handling import read, write
 from os import fsync
 from json import dumps, loads
 
-vector_file_path = '../resources/vector/esa_v1_full.txt'
+vector_file_path = './resources/vector/esa_v1_full.txt'
 
 vector_words = [word for word in get_unique_dataset_words()]
 vector_words_count = len(vector_words)
