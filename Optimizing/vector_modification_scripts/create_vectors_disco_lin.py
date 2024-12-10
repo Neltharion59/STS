@@ -10,8 +10,8 @@ from math import log10
 from util.file_handling import read, write
 from corpora_modification_scripts.Util import get_unique_dataset_words, get_non_stop_feature_words, get_stop_words
 
-vector_file_path_raw = '../resources/vector/disco_raw.txt'
-vector_file_path_lin = '../resources/vector/disco_lin.json'
+vector_file_path_raw = './resources/vector/disco_raw.txt'
+vector_file_path_lin = './resources/vector/disco_lin.json'
 
 vector_words = get_unique_dataset_words()
 feature_words = filter(lambda word: word not in get_stop_words(), get_non_stop_feature_words())

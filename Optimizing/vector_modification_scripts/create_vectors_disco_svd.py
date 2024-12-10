@@ -10,8 +10,8 @@ from util.math import svd_part_1, svd_part_2
 from util.file_handling import read, write
 from corpora_modification_scripts.Util import get_non_stop_feature_words, get_stop_words
 
-vector_file_path_raw = '../resources/vector/disco_raw.txt'
-vector_file_path_svd_pattern = '../resources/vector/disco_svd_{0}.json'
+vector_file_path_raw = './resources/vector/disco_raw.txt'
+vector_file_path_svd_pattern = './resources/vector/disco_svd_{0}.json'
 
 vector_sizes = [100, 200, 300, 400, 500, 600, 700, 800]
 
