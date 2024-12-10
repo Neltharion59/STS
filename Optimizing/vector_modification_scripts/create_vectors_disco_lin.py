@@ -17,9 +17,13 @@ vector_words = get_unique_dataset_words()
 feature_words = get_non_stop_feature_words()
 window_radius = 5
 
+
 def read_vectors_raw():
     vectors = {}
     for line in read(vector_file_path_raw).split('\n'):
+        if len(line) == 0:
+            continue
+
         tokens = line.split('\t')
 
         vector_word = tokens[0]
