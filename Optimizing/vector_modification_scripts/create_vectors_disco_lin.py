@@ -52,6 +52,9 @@ print(f'[{datetime.datetime.now().strftime("%I:%M%p on %B %d, %Y")}] Prepared AL
 
 
 def calc_value(vector_word, feature_word, distance):
+    if vectors_raw[vector_word][feature_word][distance - 1] < 0.95 or vector_words_merged[distance][vector_word] == 0 or feature_words_merged[distance][feature_word] == 0:
+        return 0
+
     return log10(((vectors_raw[vector_word][feature_word][distance - 1] - 0.95) * distances_merged[distance])/(vector_words_merged[distance][vector_word]*feature_words_merged[distance][feature_word]))
 
 
