@@ -31,7 +31,7 @@ def read_vectors_raw():
 
         values = [int(value) for value in tokens[1].split(',')]
         for i in range(len(feature_words)):
-            vectors[vector_word][feature_words[i]] = values[(i*window_radius):((i+1)*window_radius-1)]
+            vectors[vector_word][feature_words[i]] = values[(i*window_radius):((i+1)*window_radius)]
 
     return vectors
 
