@@ -6,8 +6,8 @@ sys.path.append(root_path)
 import datetime
 from json import dumps
 
-from util.file_handling import svd_part_1, svd_part_2
-from util.math import read, write
+from util.math import svd_part_1, svd_part_2
+from util.file_handling import read, write
 from corpora_modification_scripts.Util import get_non_stop_feature_words, get_stop_words
 
 vector_file_path_raw = '../resources/vector/disco_raw.txt'
