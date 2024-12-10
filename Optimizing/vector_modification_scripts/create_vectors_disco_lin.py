@@ -8,15 +8,33 @@ from json import dumps, loads
 from math import log10
 
 from util.file_handling import read, write
-from corpora_modification_scripts.Util import get_unique_dataset_words, get_non_stop_feature_words, get_stop_words
+from corpora_modification_scripts.Util import get_unique_dataset_words, get_non_stop_feature_words
 
 vector_file_path_raw = './resources/vector/disco_raw.txt'
 vector_file_path_lin = './resources/vector/disco_lin.json'
 
 vector_words = get_unique_dataset_words()
-feature_words = filter(lambda word: word not in get_stop_words(), get_non_stop_feature_words())
+feature_words = get_non_stop_feature_words()
+window_radius = 5
 
-vectors_raw = read(vector_file_path_raw)
+def read_vectors_raw():
+    vectors = {}
+    for line in read(vector_file_path_raw).split('\n'):
+        tokens = line.split('\t')
+
+        vector_word = tokens[0]
+        vectors[vector_word] = {}
+
+        values = [int(value) for value in tokens[1].split(',')]
+        for i in range(len(feature_words)):
+            vectors[vector_word][feature_words[i]] = values[(i*window_radius):((i+1)*window_radius-1)]
+
+    return vectors
+
+
+print(f'[{datetime.datetime.now().strftime("%I:%M%p on %B %d, %Y")}] Reading raw vectors.')
+vectors_raw = read_vectors_raw()
+print(f'[{datetime.datetime.now().strftime("%I:%M%p on %B %d, %Y")}] Raw vectors read.')
 
 distances = [1, 2, 3, 4, 5]
 feature_words_merged = {distance: {f_word: sum(vectors_raw[v_word][f_word][distance - 1] for v_word in vector_words) for f_word in feature_words} for distance in distances}
