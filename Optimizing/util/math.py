@@ -36,7 +36,7 @@ def average(values, weights=None):
 # Params: list<list<float>>, int, [int]
 # Return: list<list<float>>
 def svd(matrix, n_elements, ndigits=2):
-    A = array(matrix)
+    A = array([matrix[key] for key in matrix])
     # Singular-value decomposition
     U, s, _ = scipy_svd(A)
     # create m x n Sigma matrix
@@ -57,7 +57,7 @@ def svd(matrix, n_elements, ndigits=2):
 
 def svd_part_1(matrix):
     print(f'[{datetime.datetime.now().strftime("%I:%M%p on %B %d, %Y")}]     Part 1: Step 1/4')
-    A = array([matrix[key] for key in matrix])
+    A = array(matrix)
 
     # Singular-value decomposition
     print(f'[{datetime.datetime.now().strftime("%I:%M%p on %B %d, %Y")}]     Part 1: Step 2/4')
