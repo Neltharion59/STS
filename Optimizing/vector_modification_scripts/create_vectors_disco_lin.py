@@ -65,21 +65,24 @@ except FileNotFoundError:
     vectors_lin = {}
     print(f'[{datetime.datetime.now().strftime("%I:%M%p on %B %d, %Y")}] Creating new vectors.')
 
+i = 0
 for vector_word in vector_words:
     if vector_word in vectors_lin:
         continue
 
+    i = i + 1
     vectors_lin[vector_word] = {}
 
     print(f'Calcing for vw:"{vector_word}"')
 
-    added = False
     for feature_word in feature_words:
-
-        added = True
         vectors_lin[vector_word][feature_word] = [calc_value(vector_word, feature_word, distance) for distance in distances]
 
-    if added:
+    if i % 500 == 0:
         print(f'Dumping".')
         write(vector_file_path_lin, dumps(vectors_lin))
         print(f'Dumped".')
+
+print(f'Dumping".')
+write(vector_file_path_lin, dumps(vectors_lin))
+print(f'Dumped".')
