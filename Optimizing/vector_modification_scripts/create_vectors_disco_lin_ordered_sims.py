@@ -17,11 +17,11 @@ feature_words = get_non_stop_feature_words()
 window_radius = 5
 
 print(f'[{datetime.datetime.now().strftime("%I:%M%p on %B %d, %Y")}] Reading lin vectors.')
-vectors_lin = loads(read(vector_file_path_lin).decode())
+vectors_lin = loads(read(vector_file_path_lin))
 print(f'[{datetime.datetime.now().strftime("%I:%M%p on %B %d, %Y")}] Lin vectors read.')
 
 try:
-    vectors_lin_sims = loads(read(vector_file_path_lin_sims)).decode()
+    vectors_lin_sims = loads(read(vector_file_path_lin_sims))
     print(f'[{datetime.datetime.now().strftime("%I:%M%p on %B %d, %Y")}] Loaded existing sim vectors.')
 except FileNotFoundError:
     vectors_lin_sims = {}
@@ -39,6 +39,9 @@ for vector_word1 in vector_words:
 
         for feature_word in feature_words:
             for p in range(window_radius):
+                print(list(vectors_lin.keys()))
+                print(list(vectors_lin[vector_word1].keys()))
+
                 increment = vectors_lin[vector_word1][feature_word][p] + vectors_lin[vector_word2][feature_word][p]
 
                 if vectors_lin[vector_word1][feature_word][p] > 0 and vectors_lin[vector_word2][feature_word][p] > 0:
