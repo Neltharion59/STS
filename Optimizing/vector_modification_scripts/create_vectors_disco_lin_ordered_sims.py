@@ -12,8 +12,6 @@ from corpora_modification_scripts.Util import get_unique_dataset_words, get_non_
 vector_file_path_lin = './resources/vector/disco_lin.json'
 vector_file_path_lin_sims = './resources/vector/disco_lin_sims.json'
 
-vector_words = get_unique_dataset_words()
-feature_words = get_non_stop_feature_words()
 window_radius = 5
 
 print(f'[{datetime.datetime.now().strftime("%I:%M%p on %B %d, %Y")}] Reading lin vectors.')
@@ -21,7 +19,7 @@ vectors_lin = loads(read(vector_file_path_lin))
 print(f'[{datetime.datetime.now().strftime("%I:%M%p on %B %d, %Y")}] Lin vectors read.')
 
 try:
-    vectors_lin_sims = loads(read(vector_file_path_lin_sims))
+    vectors_lin_sims = loads(read(vector_file_path_lin_sims)).decode()
     print(f'[{datetime.datetime.now().strftime("%I:%M%p on %B %d, %Y")}] Loaded existing sim vectors.')
 except FileNotFoundError:
     vectors_lin_sims = {}
