@@ -17,7 +17,7 @@ feature_words = get_non_stop_feature_words()
 window_radius = 5
 
 print(f'[{datetime.datetime.now().strftime("%I:%M%p on %B %d, %Y")}] Reading lin vectors.')
-vectors_lin = loads(read(vector_file_path_lin)).decode()
+vectors_lin = loads(read(vector_file_path_lin).decode())
 print(f'[{datetime.datetime.now().strftime("%I:%M%p on %B %d, %Y")}] Lin vectors read.')
 
 try:
