@@ -16,8 +16,30 @@ vector_file_path_svd_pattern = './resources/vector/disco_svd_{0}.json'
 vector_sizes = [100, 200, 300, 400, 500, 600, 700, 800]
 
 feature_words = filter(lambda word: word not in get_stop_words(), get_non_stop_feature_words())
+window_radius = 5
 
-vectors_raw = read(vector_file_path_raw)
+
+def read_vectors_raw():
+    vectors = {}
+    for line in read(vector_file_path_raw).split('\n'):
+        if len(line) == 0:
+            continue
+
+        tokens = line.split('\t')
+
+        vector_word = tokens[0]
+        vectors[vector_word] = {}
+
+        values = [int(value) for value in tokens[1].split(',')]
+        for i in range(len(feature_words)):
+            vectors[vector_word][feature_words[i]] = values[(i*window_radius):((i+1)*window_radius)]
+
+    return vectors
+
+
+print(f'[{datetime.datetime.now().strftime("%I:%M%p on %B %d, %Y")}] Reading raw vectors.')
+vectors_raw = read_vectors_raw()
+print(f'[{datetime.datetime.now().strftime("%I:%M%p on %B %d, %Y")}] Raw vectors read.')
 
 matrix_raw = [sum([vectors_raw[vector_word][feature_word] for feature_word in feature_words]) for vector_word in vectors_raw]
 svd_matrix_part_1 = None
