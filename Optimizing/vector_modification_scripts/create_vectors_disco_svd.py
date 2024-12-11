@@ -56,7 +56,7 @@ for vector_size in vector_sizes:
     #    print(f'[{datetime.datetime.now().strftime("%I:%M%p on %B %d, %Y")}] Part 1 Already calculated')
 
     print(f'[{datetime.datetime.now().strftime("%I:%M%p on %B %d, %Y")}] Calculating SVD')
-    matrix_svd = short_svd #svd_part_2(svd_matrix_part_1, vector_size)
+    matrix_svd = short_svd(matrix_raw, vector_size) #svd_part_2(svd_matrix_part_1, vector_size)
     print(f'[{datetime.datetime.now().strftime("%I:%M%p on %B %d, %Y")}] Calculated SVD')
 
     print(f'[{datetime.datetime.now().strftime("%I:%M%p on %B %d, %Y")}] Transforming to vectors')
