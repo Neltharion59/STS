@@ -41,7 +41,7 @@ print(f'[{datetime.datetime.now().strftime("%I:%M%p on %B %d, %Y")}] Reading raw
 vectors_raw = read_vectors_raw()
 print(f'[{datetime.datetime.now().strftime("%I:%M%p on %B %d, %Y")}] Raw vectors read.')
 
-matrix_raw = [sum([vectors_raw[vector_word][feature_word] for feature_word in feature_words]) for vector_word in vectors_raw]
+matrix_raw = [sum([sum(vectors_raw[vector_word][feature_word]) for feature_word in feature_words]) for vector_word in vectors_raw]
 svd_matrix_part_1 = None
 
 for vector_size in vector_sizes:
