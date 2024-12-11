@@ -27,6 +27,10 @@ except FileNotFoundError:
     vectors_lin_sims = {}
     print(f'[{datetime.datetime.now().strftime("%I:%M%p on %B %d, %Y")}] Creating new sim vectors.')
 
+x = set([len(vectors_lin[w].keys()) for w in vector_words])
+print(x)
+exit(1)
+
 for vector_word1 in vector_words:
     if vector_word1 in vectors_lin_sims:
         continue
@@ -39,10 +43,6 @@ for vector_word1 in vector_words:
 
         for feature_word in feature_words:
             for p in range(window_radius):
-                print(list(vectors_lin.keys())[:10])
-                print('--------------')
-                print(list(vectors_lin[vector_word1].keys())[:10])
-
                 increment = vectors_lin[vector_word1][feature_word][p] + vectors_lin[vector_word2][feature_word][p]
 
                 if vectors_lin[vector_word1][feature_word][p] > 0 and vectors_lin[vector_word2][feature_word][p] > 0:
