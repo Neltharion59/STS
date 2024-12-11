@@ -12,6 +12,8 @@ from corpora_modification_scripts.Util import get_unique_dataset_words, get_non_
 vector_file_path_lin = './resources/vector/disco_lin.json'
 vector_file_path_lin_sims = './resources/vector/disco_lin_sims.json'
 
+vector_words = get_unique_dataset_words()
+feature_words = get_non_stop_feature_words()
 window_radius = 5
 
 print(f'[{datetime.datetime.now().strftime("%I:%M%p on %B %d, %Y")}] Reading lin vectors.')
