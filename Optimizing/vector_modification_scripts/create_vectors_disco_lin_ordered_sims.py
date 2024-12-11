@@ -39,8 +39,9 @@ for vector_word1 in vector_words:
 
         for feature_word in feature_words:
             for p in range(window_radius):
-                print(list(vectors_lin.keys()))
-                print(list(vectors_lin[vector_word1].keys()))
+                print(list(vectors_lin.keys())[:10])
+                print('--------------')
+                print(list(vectors_lin[vector_word1].keys())[:10])
 
                 increment = vectors_lin[vector_word1][feature_word][p] + vectors_lin[vector_word2][feature_word][p]
 
