@@ -27,8 +27,10 @@ except FileNotFoundError:
     vectors_lin_sims = {}
     print(f'[{datetime.datetime.now().strftime("%I:%M%p on %B %d, %Y")}] Creating new sim vectors.')
 
-x = set([len(vectors_lin[w].keys()) for w in vector_words])
+
+x = set([len(vectors_lin[w].keys()) for w in vectors_lin])
 print(x)
+print(len(vectors_lin.keys()))
 exit(1)
 
 for vector_word1 in vector_words:
