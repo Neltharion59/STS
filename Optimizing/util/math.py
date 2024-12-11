@@ -5,7 +5,7 @@ import operator as op
 from functools import reduce
 from numpy import array, diag, zeros
 from scipy.linalg import svd as scipy_svd
-
+from sklearn.decomposition import TruncatedSVD
 
 
 # Handy function to easily process missing values
@@ -57,6 +57,7 @@ def svd(matrix, n_elements, ndigits=2):
 
 def svd_part_1(matrix):
     print(f'[{datetime.datetime.now().strftime("%I:%M%p on %B %d, %Y")}]     Part 1: Step 1/4')
+    print(f'{len(matrix)}x{len(matrix[0])}')
     A = array(matrix)
 
     # Singular-value decomposition
@@ -76,13 +77,25 @@ def svd_part_1(matrix):
 
 def svd_part_2(part1_products, n_elements):
     print(f'[{datetime.datetime.now().strftime("%I:%M%p on %B %d, %Y")}]     Part 2: Step 1/3')
-    Sigma = part1_products['sigma'][:, :n_elements]
+    Sigma = part1_products['sigma']
+
+    Sigma = Sigma[:, :n_elements]
+    U = part1_products['u']
 
     # transform
     print(f'[{datetime.datetime.now().strftime("%I:%M%p on %B %d, %Y")}]     Part 2: Step 2/3')
-    T = part1_products['u'].dot(Sigma)
+    T = U .dot(Sigma)
 
     print(f'[{datetime.datetime.now().strftime("%I:%M%p on %B %d, %Y")}]     Part 2: Step 3/3')
     T = T.tolist()
 
     return T
+
+
+def short_svd(matrix, n_elements):
+    A = array(matrix)
+    svd = TruncatedSVD(n_components=n_elements)
+    svd.fit(A)
+    result= svd.transform(A)
+    result = result.tolist()
+    return result

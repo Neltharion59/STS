@@ -6,7 +6,7 @@ sys.path.append(root_path)
 import datetime
 from json import dumps
 
-from util.math import svd_part_1, svd_part_2
+from util.math import short_svd
 from util.file_handling import read, write
 from corpora_modification_scripts.Util import get_stop_words
 
@@ -37,7 +37,7 @@ vectors_raw = read_vectors_raw()
 print(f'[{datetime.datetime.now().strftime("%I:%M%p on %B %d, %Y")}] Raw vectors read.')
 
 matrix_raw = [vectors_raw[vector_word] for vector_word in vectors_raw]
-svd_matrix_part_1 = None
+#svd_matrix_part_1 = None
 
 for vector_size in vector_sizes:
     print(f'[{datetime.datetime.now().strftime("%I:%M%p on %B %d, %Y")}] Running vector size: "{vector_size}".')
@@ -48,16 +48,16 @@ for vector_size in vector_sizes:
         print(f'[{datetime.datetime.now().strftime("%I:%M%p on %B %d, %Y")}] Already exists')
         continue
 
-    if svd_matrix_part_1 is None:
-        print(f'[{datetime.datetime.now().strftime("%I:%M%p on %B %d, %Y")}] Calculating part 1')
-        svd_matrix_part_1 = svd_part_1(matrix_raw)
-        print(f'[{datetime.datetime.now().strftime("%I:%M%p on %B %d, %Y")}] Calculated part 1')
-    else:
-        print(f'[{datetime.datetime.now().strftime("%I:%M%p on %B %d, %Y")}] Part 1 Already calculated')
+    #if svd_matrix_part_1 is None:
+    #    print(f'[{datetime.datetime.now().strftime("%I:%M%p on %B %d, %Y")}] Calculating part 1')
+    #    svd_matrix_part_1 = svd_part_1(matrix_raw)
+    #    print(f'[{datetime.datetime.now().strftime("%I:%M%p on %B %d, %Y")}] Calculated part 1')
+    #else:
+    #    print(f'[{datetime.datetime.now().strftime("%I:%M%p on %B %d, %Y")}] Part 1 Already calculated')
 
-    print(f'[{datetime.datetime.now().strftime("%I:%M%p on %B %d, %Y")}] Calculating part 2')
-    matrix_svd = svd_part_2(svd_matrix_part_1, vector_size)
-    print(f'[{datetime.datetime.now().strftime("%I:%M%p on %B %d, %Y")}] Calculated part 2')
+    print(f'[{datetime.datetime.now().strftime("%I:%M%p on %B %d, %Y")}] Calculating SVD')
+    matrix_svd = short_svd #svd_part_2(svd_matrix_part_1, vector_size)
+    print(f'[{datetime.datetime.now().strftime("%I:%M%p on %B %d, %Y")}] Calculated SVD')
 
     print(f'[{datetime.datetime.now().strftime("%I:%M%p on %B %d, %Y")}] Transforming to vectors')
     vectors_svd = {word: row for word, row in zip(list(vectors_raw.keys()), matrix_svd)}
