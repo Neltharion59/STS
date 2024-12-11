@@ -15,7 +15,7 @@ vector_file_path_svd_pattern = './resources/vector/disco_svd_{0}.json'
 
 vector_sizes = [100, 200, 300, 400, 500, 600, 700, 800]
 
-feature_words = filter(lambda word: word not in get_stop_words(), get_non_stop_feature_words())
+feature_words = list(filter(lambda word: word not in get_stop_words(), get_non_stop_feature_words()))
 window_radius = 5
 
 
