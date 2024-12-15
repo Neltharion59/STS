@@ -27,6 +27,7 @@ except FileNotFoundError:
     vectors_lin_sims = {}
     print(f'[{datetime.datetime.now().strftime("%I:%M%p on %B %d, %Y")}] Creating new sim vectors.')
 
+i = 0
 for vector_word1 in vector_words:
     if vector_word1 in vectors_lin_sims:
         continue
@@ -50,9 +51,12 @@ for vector_word1 in vector_words:
         sims.append({'word': vector_word2, 'sim': similarity})
 
     sims = sorted(sims, key=lambda element: element['sim'], reverse=True)
-    print(sims)
-    exit(1)
     vectors_lin_sims[vector_word1] = sims
-    write(vector_file_path_lin_sims, dumps(vectors_lin_sims))
+
+    i = i + 1
+    if i % 200 == 199:
+        write(vector_file_path_lin_sims, dumps(vectors_lin_sims))
+
+write(vector_file_path_lin_sims, dumps(vectors_lin_sims))
 
 
