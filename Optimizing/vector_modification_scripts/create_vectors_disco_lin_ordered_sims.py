@@ -27,12 +27,6 @@ except FileNotFoundError:
     vectors_lin_sims = {}
     print(f'[{datetime.datetime.now().strftime("%I:%M%p on %B %d, %Y")}] Creating new sim vectors.')
 
-
-x = set([len(vectors_lin[w].keys()) for w in vectors_lin])
-print(x)
-print(len(vectors_lin.keys()))
-exit(1)
-
 for vector_word1 in vector_words:
     if vector_word1 in vectors_lin_sims:
         continue
@@ -59,6 +53,6 @@ for vector_word1 in vector_words:
     print(sims)
     exit(1)
     vectors_lin_sims[vector_word1] = sims
-    write(dumps(vectors_lin_sims))
+    write(vector_file_path_lin_sims, dumps(vectors_lin_sims))
 
 
