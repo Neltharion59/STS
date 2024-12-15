@@ -46,10 +46,10 @@ for vector_word1 in vector_words:
 
                 sum_bottom = sum_bottom + increment
 
-        similarity = round(sum_top/sum_bottom, 4)
+        similarity = abs(round(sum_top/sum_bottom, 4))
         sims.append({'word': vector_word2, 'sim': similarity})
 
-    sims = sorted(sims, key=lambda element: element['sim'])
+    sims = sorted(sims, key=lambda element: element['sim'], reverse=True)
     print(sims)
     exit(1)
     vectors_lin_sims[vector_word1] = sims
