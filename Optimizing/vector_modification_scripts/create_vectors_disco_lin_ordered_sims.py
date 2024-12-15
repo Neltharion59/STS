@@ -54,8 +54,10 @@ for vector_word1 in vector_words:
     vectors_lin_sims[vector_word1] = sims
 
     i = i + 1
-    if i % 200 == 199:
+    if i % 500 == 499:
+        print(f'[{datetime.datetime.now().strftime("%I:%M%p on %B %d, %Y")}] Dumping.')
         write(vector_file_path_lin_sims, dumps(vectors_lin_sims))
+        print(f'[{datetime.datetime.now().strftime("%I:%M%p on %B %d, %Y")}] Dumped.')
 
 write(vector_file_path_lin_sims, dumps(vectors_lin_sims))
 
