@@ -47,7 +47,7 @@ for vector_word1 in vector_words:
 
                 sum_bottom = sum_bottom + increment
 
-        similarity = abs(round(sum_top/sum_bottom, 4))
+        similarity = abs(round(sum_top/sum_bottom, 4)) if sum_bottom != 0 else 0
         sims.append({'word': vector_word2, 'sim': similarity})
 
     sims = [x for x in sims if x['sim'] > 0]
