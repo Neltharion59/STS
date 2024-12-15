@@ -50,11 +50,13 @@ for vector_word1 in vector_words:
         similarity = abs(round(sum_top/sum_bottom, 4))
         sims.append({'word': vector_word2, 'sim': similarity})
 
+    sims = [x for x in sims if x['sim'] > 0]
     sims = sorted(sims, key=lambda element: element['sim'], reverse=True)
+    sims = sims[:100]
     vectors_lin_sims[vector_word1] = sims
 
     i = i + 1
-    if i % 500 == 499:
+    if i % 200 == 199:
         print(f'[{datetime.datetime.now().strftime("%I:%M%p on %B %d, %Y")}] Dumping.')
         write(vector_file_path_lin_sims, dumps(vectors_lin_sims))
         print(f'[{datetime.datetime.now().strftime("%I:%M%p on %B %d, %Y")}] Dumped.')
