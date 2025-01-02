@@ -18,6 +18,6 @@ for vector_size in vector_sizes:
     vector_file_path_svd = vector_file_path_svd_pattern.format(vector_size)
 
     matrix_svd = short_svd(matrix_hal_full, vector_size)
-    vectors_svd = {word: row for word, row in zip([record[0] for record in vectors_hal_full]), matrix_svd}
+    vectors_svd = {word: row for word, row in zip([record[0] for record in vectors_hal_full], matrix_svd)}
     vectors_svd_json = dumps(vectors_svd)
     write(vector_file_path_svd, vectors_svd_json)
