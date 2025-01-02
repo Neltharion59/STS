@@ -1,143 +1,174 @@
 # Library-like script providing vector-based similarity methods (along with function to turn text to vector)
+import os
+root_path = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
+import sys
+sys.path.append(root_path)
 
 from decimal import Decimal
 from math import sqrt
 from operator import add
-from scipy.spatial.distance import cosine as cos
-
-from dataset_modification_scripts.corpora_pool import corpora_pool
-from dataset_modification_scripts.vector_pool import vector_pool
+from functools import reduce
+from itertools import chain
+from scipy.spatial.distance import cosine as cos, cityblock as manhattan, euclidean, minkowski, braycurtis, canberra, chebyshev, correlation, jensenshannon, mahalanobis
+from corpora_modification_scripts.Util import split_to_words
 
 # Arg possibilities for vector-based methods
 args_vector_based = {
-    'corpus': [corpus.name for corpus in corpora_pool['raw'] if '2016_newscrawl' in corpus.name],
-    'vector_length': ['200', '400', '600', 'full'],
-    'window_size': ['9'],
-    'construction_method':  ['hal'],
-    'vector_merge_strategy': ['add', 'add_pos_weight', 'add_power11_weight']
+    'vector_merge_strategy': ['add', 'add_pos_weight', 'add_power11_weight', 'concat_pad', 'concat_cutoff'],
+    'missing_vector_strategy': ['skip', 'zeroes'],
+    'normalize_word_vector_length_strategy': ['pad', 'cutoff']
 }
-# Additional arg possibilities for 'p' parameter in minkowski distance
-args_minkowski_p = [3, 4, 5]
+
+
+def hal(text1, text2, args, cache):
+    if cache['vector_type'] != 'hal' or cache['vectors'] is None:
+        cache['vector_type'] = 'hal'
+        cache['vectors'] = {} # Load the vectors
+
+    v1, v2 = vectorize_text(text1, text2, args, cache)
+    distance = vector_distance(v1, v2, args['distance_metric'])
+
+    return distance
+
+
+def lsa(text1, text2, args, cache):
+    if cache['vector_type'] != 'lsa' or cache['vectors'] is None:
+        cache['vector_type'] = 'lsa'
+        cache['vectors'] = {} # Load the vectors
+
+    v1, v2 = vectorize_text(text1, text2, args, cache)
+    distance = vector_distance(v1, v2, args['distance_metric'])
+
+    return distance
+
+
+def esa(text1, text2, args, cache):
+    if cache['vector_type'] != 'esa' or cache['vectors'] is None:
+        cache['vector_type'] = 'esa'
+        cache['vectors'] = {} # Load the vectors
+
+    v1, v2 = vectorize_text(text1, text2, args, cache)
+    distance = vector_distance(v1, v2, args['distance_metric'])
+
+    return distance
+
+
+def disco(text1, text2, args, cache):
+    if cache['vector_type'] != 'disco' or cache['vectors'] is None:
+        cache['vector_type'] = 'disco'
+        cache['vectors'] = {} # Load the vectors
+
+    v1, v2 = vectorize_text(text1, text2, args, cache)
+    distance = vector_distance(v1, v2, args['distance_metric'])
+
+    return distance
+
+
+def openai(text1, text2, args, cache):
+    if cache['vector_type'] != 'openai' or cache['vectors'] is None:
+        cache['vector_type'] = 'openai'
+        cache['vectors'] = {} # Load the vectors
+
+    v1, v2 = vectorize_text(text1, text2, args, cache)
+    distance = vector_distance(v1, v2, args['distance_metric'])
+
+    return distance
+
+
 
 
 # For given strings of text creates vector representation based on args.
 # Params: str, str, dict<str, str>
 # Return: list<float>, list<float>
-def vectorize_text(text1, text2, args):
-    # Load object with persisted vector representations of known words
-    vector_object = vector_pool[args['construction_method']][args['corpus']].access_vector_object()
+def vectorize_text(text1, text2, args, cache):
+    lemma1 = cache['lemmatizer'].lemmatize(text1)
+    lemma2 = cache['lemmatizer'].lemmatize(text2)
 
-    words1 = text1.replace('\n', '').split(' ')
-    words2 = text2.replace('\n', '').split(' ')
+    words1 = split_to_words(lemma1)
+    words2 = split_to_words(lemma2)
 
-    vector_length = int(args['vector_length']) if args['vector_length'] != 'full' else len(next(iter(vector_object['vectors'][args['window_size']]['full'].values())))
+    word_vectors1 = map(lambda w: cache['vectors'][w] if w in cache['vectors'] else [], words1)
+    word_vectors2 = map(lambda w: cache['vectors'][w] if w in cache['vectors'] else [], words2)
 
-    vector1 = [0] * vector_length
-    vector2 = [0] * vector_length
+    if 'normalize_word_vector_length_strategy' == 'pad':
+        vector_length = reduce(max, [len(v) for v in chain(word_vectors1, word_vectors2)])
+        word_vectors1 = [(v + [0] * (vector_length - len(v))) if len(v) > 0 else [] for v in word_vectors1]
+        word_vectors2 = [(v + [0] * (vector_length - len(v))) if len(v) > 0 else [] for v in word_vectors2]
+    elif 'normalize_word_vector_length_strategy' == 'cutoff':
+        vector_length = reduce(min, [len(v) for v in chain(word_vectors1, word_vectors2) if len(v) > 0])
+        word_vectors1 = [v[:vector_length] if len(v) > 0 else [] for v in word_vectors1]
+        word_vectors2 = [v[:vector_length] if len(v) > 0 else [] for v in word_vectors2]
+    else:
+        raise ValueError('Unknown normalize_word_vector_length_strategy: {0}'.format(args['normalize_word_vector_length_strategy']))
+
+    vector_length = len(cache['vectors'][list(cache['vectors'].keys())[0]])
+
+    if args['missing_vector_strategy'] == 'skip':
+        pass
+    elif args['missing_vector_strategy'] == 'zeroes':
+        word_vectors1 = [v if len(v) > 0 else [0] * vector_length for v in word_vectors1]
+        word_vectors2 = [v if len(v) > 0 else [0] * vector_length for v in word_vectors2]
+    else:
+        raise ValueError('Unknown missing_vector_strategy: {0}'.format(args['missing_vector_strategy']))
 
     if args['vector_merge_strategy'] == 'add':
-        for word in words1:
-            if word in vector_object['vectors'][args['window_size']]['full']:
-                vector1 = list(map(add, vector1, vector_object['vectors'][args['window_size']][args['vector_length']][word]))
-        for word in words2:
-            if word in vector_object['vectors'][args['window_size']]['full']:
-                vector2 = list(map(add, vector2, vector_object['vectors'][args['window_size']][args['vector_length']][word]))
+        vector1 = reduce(lambda a,b: [a[i]+b[i] for i in range(len(a))], word_vectors1, [0] * vector_length)
+        vector2 = reduce(lambda a,b: [a[i]+b[i] for i in range(len(a))], word_vectors2, [0] * vector_length)
 
     elif args['vector_merge_strategy'] == 'add_pos_weight':
-        for i in range(len(words1)):
-            if words1[i] in vector_object['vectors'][args['window_size']]['full']:
-                vector1 = list(map(lambda x, y: x + y * (i + 1), vector1, vector_object['vectors'][args['window_size']][args['vector_length']][words1[i]]))
-        for i in range(len(words2)):
-            if words2[i] in vector_object['vectors'][args['window_size']]['full']:
-                vector2 = list(map(lambda x, y: x + y * (i + 1), vector2, vector_object['vectors'][args['window_size']][args['vector_length']][words2[i]]))
+        word_vectors1 = [[x * i for x in v] for v, i in zip(word_vectors1, range(len(word_vectors1)))]
+        word_vectors2 = [[x * i for x in v] for v, i in zip(word_vectors2, range(len(word_vectors2)))]
+        vector1 = reduce(lambda a,b: [a[i]+b[i] for i in range(len(a))], word_vectors1, [0] * vector_length)
+        vector2 = reduce(lambda a,b: [a[i]+b[i] for i in range(len(a))], word_vectors2, [0] * vector_length)
 
     elif args['vector_merge_strategy'] == 'add_power11_weight':
-        for i in range(len(words1)):
-            if words1[i] in vector_object['vectors'][args['window_size']]['full']:
-                vector1 = list(map(lambda x, y: x + y * (11 ** i), vector1, vector_object['vectors'][args['window_size']][args['vector_length']][words1[i]]))
-        for i in range(len(words2)):
-            if words2[i] in vector_object['vectors'][args['window_size']]['full']:
-                vector2 = list(map(lambda x, y: x + y * (11 ** i), vector2, vector_object['vectors'][args['window_size']][args['vector_length']][words2[i]]))
+        word_vectors1 = [[x * (11**i) for x in v] for v, i in zip(word_vectors1, range(len(word_vectors1)))]
+        word_vectors2 = [[x * (11**i) for x in v] for v, i in zip(word_vectors2, range(len(word_vectors2)))]
+        vector1 = reduce(lambda a,b: [a[i]+b[i] for i in range(len(a))], word_vectors1, [0] * vector_length)
+        vector2 = reduce(lambda a,b: [a[i]+b[i] for i in range(len(a))], word_vectors2, [0] * vector_length)
 
+    elif args['vector_merge_strategy'] == 'concat_pad':
+        vector1 = reduce(add, word_vectors1)
+        vector2 = reduce(add, word_vectors2)
+
+        if len(vector1) < len(vector2):
+            vector1 = vector1 + [0] * (len(vector2) - len(vector1))
+        elif len(vector1) > len(vector2):
+            vector2 = vector2 + [0] * (len(vector1) - len(vector2))
+
+    elif args['vector_merge_strategy'] == 'concat_cutoff':
+        vector1 = reduce(add, word_vectors1)
+        vector2 = reduce(add, word_vectors2)
+        if len(vector1) < len(vector2):
+            vector2 = vector2[:len(vector1)]
+        elif len(vector1) > len(vector2):
+            vector1 = vector1[:len(vector2)]
     else:
-        raise ValueError('Unknown vector_merge_strategy: {}'.format(args['vector_merge_strategy']))
+        raise ValueError('Unknown vector_merge_strategy: {0}'.format(args['vector_merge_strategy']))
 
     return vector1, vector2
 
 
-# For given pair of strings, calculates manhattan similarity using vector representation determined by args.
-# Params: str, str, dict<str, str>
-# Return: float
-def manhattan(text1, text2, args):
-    vector1, vector2 = vectorize_text(text1, text2, args)
-
-    vector1_len = sum(map(abs, vector1))
-    vector1_len = 1 if vector1_len == 0 else vector1_len
-    vector1_normalized = list(map(lambda x: x / vector1_len, vector1))
-
-    vector2_len = sum(map(abs, vector2))
-    vector2_len = 1 if vector2_len == 0 else vector2_len
-    vector2_normalized = list(map(lambda x: x / vector2_len, vector2))
-
-    distance_vector_size = sum([abs(x - y) for x, y in zip(vector1_normalized, vector2_normalized)])
-    similarity = 0 if distance_vector_size == 0 else 1 - distance_vector_size / 2
-
-    return similarity
-
-
-# For given pair of strings, calculates euclidean similarity using vector representation determined by args.
-# Params: str, str, dict<str, str>
-# Return: float
-def euclidean(text1, text2, args):
-    vector1, vector2 = vectorize_text(text1, text2, args)
-
-    vector1_len = sqrt(sum(map(lambda x: x ** 2, vector1)))
-    vector1_len = 1 if vector1_len == 0 else vector1_len
-    vector1_normalized = list(map(lambda x: x/vector1_len, vector1))
-
-    vector2_len = sqrt(sum(map(lambda x: x ** 2, vector2)))
-    vector2_len = 1 if vector2_len == 0 else vector2_len
-    vector2_normalized = list(map(lambda x: x / vector2_len, vector2))
-
-    distance_vector_size = sqrt(sum([(x - y) ** 2 for x, y in zip(vector1_normalized, vector2_normalized)]))
-    similarity = 0 if distance_vector_size == 0 else 1 - distance_vector_size / 2
-
-    return similarity
-
-
-# For given pair of strings, calculates minkowski similarity using vector representation determined by args.
-# Params: str, str, dict<str, str>
-# Return: float
-def minkowski(text1, text2, args):
-    vector1, vector2 = vectorize_text(text1, text2, args)
-
-    temp_sum = Decimal(0)
-    for number in vector1:
-        temp_sum = Decimal(temp_sum + Decimal(Decimal(abs(number)) ** Decimal(args['p'])))
-    vector1_len = Decimal(temp_sum ** Decimal(1 / args['p']))
-    vector1_len = float(vector1_len)
-    vector1_len = 1.0 if vector1_len == 0.0 else vector1_len
-    vector1_normalized = list(map(lambda x: x/vector1_len, vector1))
-
-    temp_sum = Decimal(0)
-    for number in vector2:
-        temp_sum = Decimal(temp_sum + Decimal(Decimal(abs(number)) ** Decimal(args['p'])))
-    vector2_len = Decimal(temp_sum ** Decimal(1 / args['p']))
-    vector2_len = float(vector2_len)
-    vector2_len = 1.0 if vector2_len == 0.0 else vector2_len
-    vector2_normalized = list(map(lambda x: x / vector2_len, vector2))
-
-    distance_vector_size = (sum([round(abs(x - y) ** args['p'], ndigits=5) for x, y in zip(vector1_normalized, vector2_normalized)]) ** (1 / args['p']))
-    similarity = 0 if distance_vector_size == 0 else 1 - distance_vector_size / 2
-
-    return similarity
-
-
-# For given pair of strings, calculates cosine similarity using vector representation determined by args.
-# Params: str, str, dict<str, str>
-# Return: float
-def cosine_vector(text1, text2, args):
-    vector1, vector2 = vectorize_text(text1, text2, args)
-
-    similarity = 1 - cos(vector1, vector2)
-    return similarity
+def vector_distance(vector1, vector2, distance_metric):
+    if distance_metric == 'manhattan':
+        return manhattan(vector1, vector2)
+    elif distance_metric == 'euclidean':
+        return euclidean(vector1, vector2)
+    elif distance_metric == 'minkowski':
+        return minkowski(vector1, vector2, 3)
+    elif distance_metric == 'braycurtis':
+        return braycurtis(vector1, vector2)
+    elif distance_metric == 'canberra':
+        return canberra(vector1, vector2)
+    elif distance_metric == 'chebyshev':
+        return chebyshev(vector1, vector2)
+    elif distance_metric == 'correlation':
+        return correlation(vector1, vector2)
+    elif distance_metric == 'jensenshannon':
+        return jensenshannon(vector1, vector2)
+    elif distance_metric == 'mahalanobis':
+        return mahalanobis(vector1, vector2)
+    elif distance_metric == 'cosine':
+        return cos(vector1, vector2)
+    else:
+        raise ValueError('Unknown distance_metric: {0}'.format(distance_metric))
