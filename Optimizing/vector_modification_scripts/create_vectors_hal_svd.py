@@ -9,7 +9,7 @@ from util.math import short_svd
 
 vector_file_path_svd_pattern = './resources/vector/hal_svd_{0}.json'
 
-vectors_hal_full = [[line.split('\t')[0], line.split('\t')[1].split(',')] for line in read('../resources/vector/hal_full.txt').split('\n') if len(line) > 0]
+vectors_hal_full = [[line.split('\t')[0], line.split('\t')[1].split(',')] for line in read('./resources/vector/hal_full.txt').split('\n') if len(line) > 0]
 matrix_hal_full = [record[1] for record in vectors_hal_full]
 
 vector_sizes = [100, 200, 300, 400, 500, 600, 700, 800]

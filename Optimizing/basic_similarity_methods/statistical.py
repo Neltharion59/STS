@@ -18,9 +18,9 @@ def pmi(text1, text2, args, cache):
     words2 = split_to_words(lemma2)
 
     if 'word_occurences' not in cache:
-        cache['word_occurences'] = loads(read('../resources/word_occurences.json'))
+        cache['word_occurences'] = loads(read('./resources/word_occurences.json'))
     if 'word_co_occurences' not in cache:
-        cache['word_co_occurences'] = loads(read('../resources/word_co_occurences.json'))
+        cache['word_co_occurences'] = loads(read('./resources/word_co_occurences.json'))
 
     if args['merge_strategy'] == 'each':
         similarities = [pmi_single(w1, w2, cache) for w1 in words1 for w2 in words2]
