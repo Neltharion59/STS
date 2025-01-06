@@ -33,6 +33,7 @@ vector_word_batches = list(chunk_array(vector_words, chunk_size))
 batch_count = len(vector_word_batches)
 vector_file_path = '../resources/vector/lsa_full_{}_{}.txt'
 
+
 def save_vectors(vectors, batch_id, chunk_size):
     new_lines = []
     line_n = 0
