@@ -125,6 +125,21 @@ def openai(text1, text2, args, cache):
     return distance
 
 
+def fast_text(text1, text2, args, cache):
+    if cache['vector_type'] != 'fast_text':
+        cache['vectors'] = None
+        cache['vector_type'] = 'fast_text'
+        # Load the vectors
+        file_path = f'./resources/vector/fast_text_classic.json'
+        vectors = loads(read(file_path))
+        cache['vectors'] = vectors
+
+    v1, v2 = vectorize_text(text1, text2, args, cache)
+    distance = vector_distance(v1, v2, args['distance_metric'])
+
+    return distance
+
+
 # For given strings of text creates vector representation based on args.
 # Params: str, str, dict<str, str>
 # Return: list<float>, list<float>
