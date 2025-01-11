@@ -105,7 +105,7 @@ class Dataset:
                 print("Already predicted. Skipping " + sts_method.name)
                 return
 
-        values = list(sts_method.predict_mass(words1, words2, {}, cache))
+        values = list(sts_method.predict_mass(words1, words2, cache))
         values = [round(x, ndigits=3) for x in values]
         print("values: {}".format(values))
         results[sts_method.method_name].append({
