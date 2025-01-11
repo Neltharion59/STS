@@ -34,7 +34,7 @@ def hal(text1, text2, args, cache):
         if args['size'] == 'full':
             file_path = './resources/vector/hal_full.json'
         elif args['size'] in ['100', '200', '300', '400', '500', '600', '700', '800']:
-            file_path = f'./resources/vector/hal_svd_{args['size']}.json'
+            file_path = './resources/vector/hal_svd_{0}.json'.format(args['size'])
         else:
             raise ValueError('Unknown \'size\' of HAL vectors: {0}'.format(args['size']))
 
