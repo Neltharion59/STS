@@ -107,7 +107,6 @@ class Dataset:
 
         values = list(sts_method.predict_mass(words1, words2, cache))
         values = [round(x, ndigits=3) for x in values]
-        print("values: {}".format(values))
         results[sts_method.method_name].append({
             'args': sts_method.args,
             'values': values
