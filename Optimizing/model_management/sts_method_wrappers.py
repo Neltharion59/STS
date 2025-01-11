@@ -29,9 +29,9 @@ class STSMethod:
     # Predict STS for given lists of texts
     # Params: list<str>, list<str>, dict<str, STSMethod>
     # Return: float...
-    def predict_mass(self, text1_array, text2_array, sts_method_pool, cache):
+    def predict_mass(self, text1_array, text2_array, cache):
         for x, y in zip(text1_array, text2_array):
-            yield self.predict(x, y, sts_method_pool, cache)
+            yield self.predict(x, y, cache)
 
     # Generate name of this method based on method and param configuration
     # Params: str
