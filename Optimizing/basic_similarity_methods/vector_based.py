@@ -4,7 +4,7 @@ root_path = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
 import sys
 sys.path.append(root_path)
 
-from json import loads
+from json import load, loads
 from operator import add
 from functools import reduce
 from itertools import chain
@@ -38,7 +38,7 @@ def hal(text1, text2, args, cache):
         else:
             raise ValueError('Unknown \'size\' of HAL vectors: {0}'.format(args['size']))
 
-        cache['vectors'] = loads(file_path)
+        cache['vectors'] = read(loads(file_path))
 
     v1, v2 = vectorize_text(text1, text2, args, cache)
     distance = vector_distance(v1, v2, args['distance_metric'])
