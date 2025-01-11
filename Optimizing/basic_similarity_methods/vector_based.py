@@ -75,9 +75,10 @@ def esa(text1, text2, args, cache):
 
 
 def disco(text1, text2, args, cache):
-    if cache['vector_type'] != 'disco' or cache['vectors'] is None:
+    if cache['vector_type'] != 'disco' or cache['vector_subtype'] != args['version'] or cache['vectors'] is None:
         cache['vectors'] = None
         cache['vector_type'] = 'disco'
+        cache['vector_subtype'] = args['version']
         # Load the vectors
         if args['version'] == 'raw':
             file_path = './resources/vector/disco_raw.txt'
@@ -126,7 +127,7 @@ def openai(text1, text2, args, cache):
 
 
 def fast_text(text1, text2, args, cache):
-    if cache['vector_type'] != 'fast_text':
+    if cache['vector_type'] != 'fast_text' or cache['vectors'] is None:
         cache['vectors'] = None
         cache['vector_type'] = 'fast_text'
         # Load the vectors

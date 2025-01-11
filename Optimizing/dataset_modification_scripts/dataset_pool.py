@@ -1,12 +1,16 @@
 # Library-like script providing pool of wrappers of all defined datasets
 # Dataset is defined by its name and sub-datasets
+import os
+root_path = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
+import sys
+sys.path.append(root_path)
 
 from dataset_modification_scripts.dataset_wrapper import Dataset
 
 dataset_pool = {
     'raw': [
         Dataset(
-            "sts-benchmark",
+            "stsbenchmark",
             [
                 "stsbenchmark_sk.txt"
             ]

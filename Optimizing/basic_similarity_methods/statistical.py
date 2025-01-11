@@ -9,6 +9,10 @@ from corpora_modification_scripts.Util import split_to_words
 from util.file_handling import read
 from util.math import average
 
+args_pmi = {
+    'merge_strategy': ['each', 'positional'],
+    'aggregation_strategy': ['avg', 'max', 'min']
+}
 
 def pmi(text1, text2, args, cache):
     lemma1 = cache['lemmatizer'].lemmatize(text1)
@@ -47,6 +51,6 @@ def pmi_single(w1, w2, cache):
     pair = sorted([w1, w2])
     co_occurence = cache['word_co_occurences'][pair[0]][pair[1]]
 
-    normalized_to_minus1_1 = max(0, log2(co_occurence/(occurence1 * occurence2)))/log2(co_occurence)
+    normalized_to_minus1_1 = max(0, log2(co_occurence/(occurence1 * occurence2)))/log2(co_occurence) if log2(co_occurence) != 0 else 0
     normalized_to_0_1 = (normalized_to_minus1_1 + 1)/2
     return normalized_to_0_1

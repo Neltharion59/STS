@@ -90,7 +90,7 @@ class Dataset:
     # (only those that aren't persisted yet).
     # Params: STSMethod
     # Return:
-    def predict_and_persist_values(self, sts_method):
+    def predict_and_persist_values(self, sts_method, cache):
         print("About to predict&persist values of {} method for {} dataset".format(sts_method.name, self.name))
         # Load the dataset from disk based on its name
         words1, words2 = self.load_dataset()
@@ -105,7 +105,7 @@ class Dataset:
                 print("Already predicted. Skipping " + sts_method.name)
                 return
 
-        values = list(sts_method.predict_mass(words1, words2, {}))
+        values = list(sts_method.predict_mass(words1, words2, {}, cache))
         values = [round(x, ndigits=3) for x in values]
         print("values: {}".format(values))
         results[sts_method.method_name].append({

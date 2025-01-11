@@ -1,10 +1,14 @@
 # Library-like script providing pool of all simple STS methods
+import os
+root_path = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
+import sys
+sys.path.append(root_path)
 
 from basic_similarity_methods.character_based import *
+from basic_similarity_methods.statistical import *
 from basic_similarity_methods.knowledge_based import wu_palmer_similarity_sentence, path_similarity_sentence, \
     leacock_chodorow_similarity_sentence, args_knowledge
-from basic_similarity_methods.vector_based import args_vector_based, args_minkowski_p, manhattan, euclidean, minkowski, \
-    cosine_vector
+from basic_similarity_methods.vector_based import *
 from model_management.sts_method_wrappers import STSMethod
 
 
@@ -50,7 +54,7 @@ def add_to_method_pool(method_name, method_arg_possibilites, method_function, me
 # Dict with all available simple STS methods
 sts_method_pool = {}
 # -----------------------------------------------------------------------------
-# ------------------------   CHARACTER   --------------------------------------
+# ---------------------------   STRING   --------------------------------------
 # -----------------------------------------------------------------------------
 string_based_name_list = []
 character_based_name_list = []
@@ -159,26 +163,42 @@ term_based_name_list.append(name)
 # -----------------------------------------------------------------------------
 corpus_based_name_list = []
 
-# Add manhattan similarity
-name = "manhattan"
-add_to_method_pool(name, args_vector_based, manhattan, sts_method_pool)
+# Add hal similarity
+name = "hal"
+args_hal = {key: value for (key, value) in args_vector_based.items()}
+args_hal['size'] = ['full', '100', '200', '300', '400', '500', '600', '700', '800']
+add_to_method_pool(name, args_hal, hal, sts_method_pool)
 corpus_based_name_list.append(name)
 # -----------------------------------------------------------------------------
-# Add euclidean similarity
-name = "euclidean"
-add_to_method_pool(name, args_vector_based, euclidean, sts_method_pool)
+# Add lsa similarity
+name = "lsa"
+add_to_method_pool(name, args_vector_based, lsa, sts_method_pool)
 corpus_based_name_list.append(name)
 # -----------------------------------------------------------------------------
-# Add minkowski similarity
-name = "minkowski"
-args_minkowski = {key: value for (key, value) in args_vector_based.items()}
-args_minkowski['p'] = args_minkowski_p
-add_to_method_pool(name, args_minkowski, minkowski, sts_method_pool)
+# Add esa similarity
+name = "esa"
+add_to_method_pool(name, args_vector_based, esa, sts_method_pool)
 corpus_based_name_list.append(name)
 # -----------------------------------------------------------------------------
-# Add cosine_vector similarity
-name = "cosine_vector"
-add_to_method_pool(name, args_vector_based, cosine_vector, sts_method_pool)
+# Add disco similarity
+name = "disco"
+args_disco = {key: value for (key, value) in args_vector_based.items()}
+args_disco['version'] = ['raw', 'so_5', 'so_10', 'so_15']
+add_to_method_pool(name, args_disco, disco, sts_method_pool)
+corpus_based_name_list.append(name)
+# Add openai similarity
+name = "openai"
+args_openai = {key: value for (key, value) in args_vector_based.items()}
+args_openai['version'] = ['word_3-small', 'word_3-large', 'word_ada-002']
+add_to_method_pool(name, args_openai, openai, sts_method_pool)
+corpus_based_name_list.append(name)
+# Add fast_text similarity
+name = "fast_text"
+add_to_method_pool(name, args_vector_based, fast_text, sts_method_pool)
+corpus_based_name_list.append(name)
+# Add PMI similarity
+name = "pmi"
+add_to_method_pool(name, args_pmi, pmi, sts_method_pool)
 corpus_based_name_list.append(name)
 # -----------------------------------------------------------------------------
 # ------------------------   KNOWLEDGE   --------------------------------------
