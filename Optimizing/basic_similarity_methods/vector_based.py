@@ -39,6 +39,7 @@ def hal(text1, text2, args, cache):
             raise ValueError('Unknown \'size\' of HAL vectors: {0}'.format(args['size']))
 
         cache['vectors'] = loads(read(file_path))
+        print(cache['vectors'][list(cache['vectors'].keys())[0]])
 
     v1, v2 = vectorize_text(text1, text2, args, cache)
     distance = vector_distance(v1, v2, args['distance_metric'])
