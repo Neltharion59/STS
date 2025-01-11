@@ -135,21 +135,21 @@ def vectorize_text(text1, text2, args, cache):
     words1 = split_to_words(lemma1)
     words2 = split_to_words(lemma2)
 
-    word_vectors1 = map(lambda w: cache['vectors'][w] if w in cache['vectors'] else [], words1)
-    word_vectors2 = map(lambda w: cache['vectors'][w] if w in cache['vectors'] else [], words2)
+    word_vectors1 = list(map(lambda w: cache['vectors'][w] if w in cache['vectors'] else [], words1))
+    word_vectors2 = list(map(lambda w: cache['vectors'][w] if w in cache['vectors'] else [], words2))
 
-    if 'normalize_word_vector_length_strategy' == 'pad':
-        vector_length = reduce(max, [len(v) for v in chain(word_vectors1, word_vectors2)])
+    if args['normalize_word_vector_length_strategy'] == 'pad':
+        vector_length = reduce(max, [len(v) for v in (word_vectors1 + word_vectors2)])
         word_vectors1 = [(v + [0] * (vector_length - len(v))) if len(v) > 0 else [] for v in word_vectors1]
         word_vectors2 = [(v + [0] * (vector_length - len(v))) if len(v) > 0 else [] for v in word_vectors2]
-    elif 'normalize_word_vector_length_strategy' == 'cutoff':
+    elif args['normalize_word_vector_length_strategy'] == 'cutoff':
         vector_length = reduce(min, [len(v) for v in chain(word_vectors1, word_vectors2) if len(v) > 0])
         word_vectors1 = [v[:vector_length] if len(v) > 0 else [] for v in word_vectors1]
         word_vectors2 = [v[:vector_length] if len(v) > 0 else [] for v in word_vectors2]
     else:
         raise ValueError('Unknown normalize_word_vector_length_strategy: {0}'.format(args['normalize_word_vector_length_strategy']))
 
-    vector_length = len(cache['vectors'][list(cache['vectors'].keys())[0]])
+    #vector_length = len(cache['vectors'][list(cache['vectors'].keys())[0]])
 
     if args['missing_vector_strategy'] == 'skip':
         pass
@@ -160,18 +160,29 @@ def vectorize_text(text1, text2, args, cache):
         raise ValueError('Unknown missing_vector_strategy: {0}'.format(args['missing_vector_strategy']))
 
     if args['vector_merge_strategy'] == 'add':
+        word_vectors1 = [v for v in word_vectors1 if len(v) > 0]
+        word_vectors2 = [v for v in word_vectors2 if len(v) > 0]
+
         vector1 = reduce(lambda a,b: [a[i]+b[i] for i in range(len(a))], word_vectors1, [0] * vector_length)
         vector2 = reduce(lambda a,b: [a[i]+b[i] for i in range(len(a))], word_vectors2, [0] * vector_length)
 
     elif args['vector_merge_strategy'] == 'add_pos_weight':
-        word_vectors1 = [[x * i for x in v] for v, i in zip(word_vectors1, range(len(word_vectors1)))]
-        word_vectors2 = [[x * i for x in v] for v, i in zip(word_vectors2, range(len(word_vectors2)))]
+        word_vectors1 = [[x * (i+1) for x in v] for v, i in zip(word_vectors1, range(len(word_vectors1)))]
+        word_vectors2 = [[x * (i+1) for x in v] for v, i in zip(word_vectors2, range(len(word_vectors2)))]
+
+        word_vectors1 = [v for v in word_vectors1 if len(v) > 0]
+        word_vectors2 = [v for v in word_vectors2 if len(v) > 0]
+
         vector1 = reduce(lambda a,b: [a[i]+b[i] for i in range(len(a))], word_vectors1, [0] * vector_length)
         vector2 = reduce(lambda a,b: [a[i]+b[i] for i in range(len(a))], word_vectors2, [0] * vector_length)
 
     elif args['vector_merge_strategy'] == 'add_power11_weight':
         word_vectors1 = [[x * (11**i) for x in v] for v, i in zip(word_vectors1, range(len(word_vectors1)))]
         word_vectors2 = [[x * (11**i) for x in v] for v, i in zip(word_vectors2, range(len(word_vectors2)))]
+
+        word_vectors1 = [v for v in word_vectors1 if len(v) > 0]
+        word_vectors2 = [v for v in word_vectors2 if len(v) > 0]
+
         vector1 = reduce(lambda a,b: [a[i]+b[i] for i in range(len(a))], word_vectors1, [0] * vector_length)
         vector2 = reduce(lambda a,b: [a[i]+b[i] for i in range(len(a))], word_vectors2, [0] * vector_length)
 

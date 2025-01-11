@@ -1,6 +1,6 @@
 import ufal.udpipe
 from functools import reduce
-model_path_suffix = './lemmatize/slovak-snk-ud-2.5-191206.udpipe'
+model_path_suffix = './dataset_modification_scripts/lemmatize/slovak-snk-ud-2.5-191206.udpipe'
 
 class Lemmatizer:
     def __init__(self, model_pat_prefix=''):

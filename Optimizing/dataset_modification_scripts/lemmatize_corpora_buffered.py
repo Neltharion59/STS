@@ -2,6 +2,7 @@
 
 import sys
 import os
+
 conf_path = os.getcwd()
 sys.path.append('D:/git/STS/Optimizing/')
 
@@ -11,7 +12,7 @@ from os import listdir
 from os.path import isfile, join
 import re
 import sys
-from dataset_modification_scripts.lemmatize.lemmatizer_wrapper import Leprogress_matrix_construction_oscarsk_
+from dataset_modification_scripts.lemmatize.lemmatizer_wrapper import Lemmatizer
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
 lemmatizer = Lemmatizer()
