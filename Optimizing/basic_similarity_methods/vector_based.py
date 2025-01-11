@@ -31,6 +31,7 @@ def hal(text1, text2, args, cache):
         if 'size' not in args:
             raise ValueError('Size not present in args when calculating with HAL vectors')
 
+        args['size'] = '300'
         if args['size'] == 'full':
             file_path = './resources/vector/hal_full.json'
         elif args['size'] in ['100', '200', '300', '400', '500', '600', '700', '800']:
@@ -39,7 +40,7 @@ def hal(text1, text2, args, cache):
             raise ValueError('Unknown \'size\' of HAL vectors: {0}'.format(args['size']))
 
         cache['vectors'] = loads(read(file_path))
-        print(cache['vectors'][list(cache['vectors'].keys())[0]])
+        exit()
 
     v1, v2 = vectorize_text(text1, text2, args, cache)
     distance = vector_distance(v1, v2, args['distance_metric'])
