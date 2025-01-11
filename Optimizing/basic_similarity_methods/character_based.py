@@ -9,7 +9,7 @@ import textdistance
 # Calculate Hamming similarity on given pair of strings using given parameters.
 # Params: str, str, dict<string, string>
 # Return: float/None
-def hamming(text1, text2, args):
+def hamming(text1, text2, args, cache):
     # Make sure text1 is the longer one (or same-sized one)
     if len(text1) < len(text2):
         text1, text2 = text2, text1
@@ -33,42 +33,42 @@ def hamming(text1, text2, args):
 # Calculate levenshtein similarity on given pair of strings using given parameters.
 # Params: str, str, dict<string, string>
 # Return: float
-def levenshtein(text1, text2, args):
+def levenshtein(text1, text2, args, cache):
     return textdistance.levenshtein.normalized_similarity(text1, text2)
 
 
 # Calculate damerau_levenshtein similarity on given pair of strings using given parameters.
 # Params: str, str, dict<string, string>
 # Return: float
-def damerau_levenshtein(text1, text2, args):
+def damerau_levenshtein(text1, text2, args, cache):
     return textdistance.damerau_levenshtein.normalized_similarity(text1, text2)
 
 
 # Calculate jaro similarity on given pair of strings using given parameters.
 # Params: str, str, dict<string, string>
 # Return: float
-def jaro(text1, text2, args):
+def jaro(text1, text2, args, cache):
     return textdistance.jaro.normalized_similarity(text1, text2)
 
 
 # Calculate jaro_winkler similarity on given pair of strings using given parameters.
 # Params: str, str, dict<string, string>
 # Return: float
-def jaro_winkler(text1, text2, args):
+def jaro_winkler(text1, text2, args, cache):
     return textdistance.jaro_winkler.normalized_similarity(text1, text2)
 
 
 # Calculate needleman_wunsch similarity on given pair of strings using given parameters.
 # Params: str, str, dict<string, string>
 # Return: float
-def needleman_wunsch(text1, text2, args):
+def needleman_wunsch(text1, text2, args, cache):
     return textdistance.needleman_wunsch.normalized_similarity(text1, text2)
 
 
 # Calculate smith_waterman similarity on given pair of strings using given parameters.
 # Params: str, str, dict<string, string>
 # Return: float
-def smith_waterman(text1, text2, args):
+def smith_waterman(text1, text2, args, cache):
     return textdistance.smith_waterman.normalized_similarity(text1, text2)
 
 # Standard possibilities of args for term-based methods
@@ -80,7 +80,7 @@ args_set_based = {
 # Calculate jaccard similarity on given pair of strings using given parameters.
 # Params: str, str, dict<string, string>
 # Return: float
-def jaccard(text1, text2, args):
+def jaccard(text1, text2, args, cache):
     for arg in args:
         if arg not in args_set_based:
             raise ValueError('Jaccard method received unknown argument - \'{}\''.format(arg))
@@ -101,7 +101,7 @@ def jaccard(text1, text2, args):
 # Calculate sorensen_dice similarity on given pair of strings using given parameters.
 # Params: str, str, dict<string, string>
 # Return: float
-def sorensen_dice(text1, text2, args):
+def sorensen_dice(text1, text2, args, cache):
     for arg in args:
         if arg not in args_set_based:
             raise ValueError('sorensen_dice method received unknown argument - \'{}\''.format(arg))
@@ -122,7 +122,7 @@ def sorensen_dice(text1, text2, args):
 # Calculate overlap similarity on given pair of strings using given parameters.
 # Params: str, str, dict<string, string>
 # Return: float
-def overlap(text1, text2, args):
+def overlap(text1, text2, args, cache):
     for arg in args:
         if arg not in args_set_based:
             raise ValueError('overlap method received unknown argument - \'{}\''.format(arg))
@@ -143,7 +143,7 @@ def overlap(text1, text2, args):
 # Calculate cosine similarity on given pair of strings using given parameters.
 # Params: str, str, dict<string, string>
 # Return: float
-def cosine(text1, text2, args):
+def cosine(text1, text2, args, cache):
     for arg in args:
         if arg not in args_set_based:
             raise ValueError('cosine method received unknown argument - \'{}\''.format(arg))
@@ -158,7 +158,7 @@ def cosine(text1, text2, args):
 # Calculate lcsseq similarity on given pair of strings using given parameters.
 # Params: str, str, dict<string, string>
 # Return: float
-def lcsseq(text1, text2, args):
+def lcsseq(text1, text2, args, cache):
     for arg in args:
         if arg not in args_set_based:
             raise ValueError('lcsseq method received unknown argument - \'{}\''.format(arg))
@@ -173,7 +173,7 @@ def lcsseq(text1, text2, args):
 # Calculate lcsstr similarity on given pair of strings using given parameters.
 # Params: str, str, dict<string, string>
 # Return: float
-def lcsstr(text1, text2, args):
+def lcsstr(text1, text2, args, cache):
     for arg in args:
         if arg not in args_set_based:
             raise ValueError('lcsstr method received unknown argument - \'{}\''.format(arg))
@@ -188,7 +188,7 @@ def lcsstr(text1, text2, args):
 # Calculate ochiai similarity on given pair of strings using given parameters.
 # Params: str, str, dict<string, string>
 # Return: float
-def ochiai(text1, text2, args):
+def ochiai(text1, text2, args, cache):
     for arg in args:
         if arg not in args_set_based:
             raise ValueError('ochiai method received unknown argument - \'{}\''.format(arg))

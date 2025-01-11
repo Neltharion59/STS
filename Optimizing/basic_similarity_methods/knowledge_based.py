@@ -71,7 +71,7 @@ def calculate_knowledge_similarity_sentence(sentence1, sentence2, similarity_fun
 # Calculates Wu-Palmer similarity of given pair of texts represented by strings
 # Params: str, str, dict<str, str>
 # Return: float
-def wu_palmer_similarity_sentence(sentence1, sentence2, args):
+def wu_palmer_similarity_sentence(sentence1, sentence2, args, cache):
     # Call the uniformly processing function to calculate the value
     result = calculate_knowledge_similarity_sentence(
         sentence1, sentence2, lambda syn1, syn2: syn1.wup_similarity(syn2), args
@@ -83,7 +83,7 @@ def wu_palmer_similarity_sentence(sentence1, sentence2, args):
 # Calculates path similarity of given pair of texts represented by strings
 # Params: str, str, dict<str, str>
 # Return: float
-def path_similarity_sentence(sentence1, sentence2, args):
+def path_similarity_sentence(sentence1, sentence2, args, cache):
     # Call the uniformly processing function to calculate the value
     result = calculate_knowledge_similarity_sentence(
         sentence1, sentence2, lambda syn1, syn2: syn1.path_similarity(syn2), args
@@ -95,7 +95,7 @@ def path_similarity_sentence(sentence1, sentence2, args):
 # Calculates Leacock-Chodorow similarity of given pair of texts represented by strings
 # Params: str, str, dict<str, str>
 # Return: float
-def leacock_chodorow_similarity_sentence(sentence1, sentence2, args):
+def leacock_chodorow_similarity_sentence(sentence1, sentence2, args, cache):
     # Call the uniformly processing function to calculate the value
     result = calculate_knowledge_similarity_sentence(
         sentence1, sentence2, lambda syn1, syn2: None if syn1.pos() != syn2.pos() else (min(1, none_2_zero(syn1.lch_similarity(syn2))/leacock_chodorow_similarity_cap)), args
