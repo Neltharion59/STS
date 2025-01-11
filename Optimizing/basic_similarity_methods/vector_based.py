@@ -23,7 +23,7 @@ unique_dataset_words = get_unique_dataset_words()
 
 
 def hal(text1, text2, args, cache):
-    if cache['vector_type'] != 'hal' or cache['vector_subtype'] != args['size'] or cache['vectors'] is None:
+    if 'vector_type' not in cache or 'vector_subtype' not in cache or 'vectors' not in cache or cache['vector_type'] != 'hal' or cache['vector_subtype'] != args['size'] or cache['vectors'] is None:
         cache['vectors'] = None
         cache['vector_type'] = 'hal'
         cache['vector_subtype'] = args['size']
@@ -47,7 +47,7 @@ def hal(text1, text2, args, cache):
 
 
 def lsa(text1, text2, args, cache):
-    if cache['vector_type'] != 'lsa' or cache['vectors'] is None:
+    if 'vector_type' not in cache or 'vectors' not in cache or cache['vector_type'] != 'lsa' or cache['vectors'] is None:
         cache['vectors'] = None
         cache['vector_type'] = 'lsa'
         # Load the vectors
@@ -60,7 +60,7 @@ def lsa(text1, text2, args, cache):
 
 
 def esa(text1, text2, args, cache):
-    if cache['vector_type'] != 'esa' or cache['vectors'] is None:
+    if 'vector_type' not in cache or 'vectors' not in cache or cache['vector_type'] != 'esa' or cache['vectors'] is None:
         cache['vectors'] = None
         cache['vector_type'] = 'esa'
         # Load the vectors
@@ -75,7 +75,7 @@ def esa(text1, text2, args, cache):
 
 
 def disco(text1, text2, args, cache):
-    if cache['vector_type'] != 'disco' or cache['vector_subtype'] != args['version'] or cache['vectors'] is None:
+    if 'vector_type' not in cache or 'vector_subtype' not in cache or 'vectors' not in cache or cache['vector_type'] != 'disco' or cache['vector_subtype'] != args['version'] or cache['vectors'] is None:
         cache['vectors'] = None
         cache['vector_type'] = 'disco'
         cache['vector_subtype'] = args['version']
@@ -108,7 +108,7 @@ def disco(text1, text2, args, cache):
 
 
 def openai(text1, text2, args, cache):
-    if cache['vector_type'] != 'openai' or cache['vector_subtype'] != args['version'] or cache['vectors'] is None:
+    if 'vector_type' not in cache or 'vector_subtype' not in cache or 'vectors' not in cache or cache['vector_type'] != 'openai' or cache['vector_subtype'] != args['version'] or cache['vectors'] is None:
         cache['vectors'] = None
         cache['vector_type'] = 'openai'
         cache['vector_subtype'] = args['version']
@@ -127,7 +127,7 @@ def openai(text1, text2, args, cache):
 
 
 def fast_text(text1, text2, args, cache):
-    if cache['vector_type'] != 'fast_text' or cache['vectors'] is None:
+    if 'vector_type' not in cache or 'vectors' not in cache or cache['vector_type'] != 'fast_text' or cache['vectors'] is None:
         cache['vectors'] = None
         cache['vector_type'] = 'fast_text'
         # Load the vectors
