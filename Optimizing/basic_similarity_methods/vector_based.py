@@ -114,7 +114,7 @@ def openai(text1, text2, args, cache):
         cache['vector_subtype'] = args['version']
         # Load the vectors
         if args['version'] in ['word_3-small', 'word_3-large', 'word_ada-002']:
-            file_path = f'./resources/vector/open_ai_words_text-embedding-{args['version'].replace('word_', '')}.txt'
+            file_path = './resources/vector/open_ai_words_text-embedding-{0}.txt'.format(args['version'].replace('word_', ''))
             vectors = loads(read(file_path))
             cache['vectors'] = vectors
         else:
@@ -131,7 +131,7 @@ def fast_text(text1, text2, args, cache):
         cache['vectors'] = None
         cache['vector_type'] = 'fast_text'
         # Load the vectors
-        file_path = f'./resources/vector/fast_text_classic.json'
+        file_path = './resources/vector/fast_text_classic.json'
         vectors = loads(read(file_path))
         cache['vectors'] = vectors
 
@@ -265,7 +265,7 @@ def load_lsa_vectors(text1, text2, cache):
         if len(batch_items) == 0:
             continue
 
-        with open(f'./resources/vector/lsa_full_{batch_id}_1000.txt', 'r', encoding='utf-8') as lsa_file:
+        with open('./resources/vector/lsa_full_{0}_1000.txt'.format(batch_id), 'r', encoding='utf-8') as lsa_file:
             i = 0
             j = 0
             for line in lsa_file:
@@ -280,7 +280,7 @@ def load_lsa_vectors(text1, text2, cache):
                 i = i + 1
 
     if len([item for item in indices if 'vector' not in item]) > 0:
-        raise ValueError(f'No LSA vectors found for items: {[item for item in indices if 'vector' not in item]}')
+        raise ValueError('No LSA vectors found for items: {0}'.format([item for item in indices if 'vector' not in item]))
 
     vectors = {item['word']: item['vector'] for item in indices}
 
