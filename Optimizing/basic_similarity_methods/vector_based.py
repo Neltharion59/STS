@@ -17,7 +17,8 @@ from corpora_modification_scripts.Util import get_unique_dataset_words
 args_vector_based = {
     'vector_merge_strategy': ['add', 'add_pos_weight', 'add_power11_weight', 'concat_pad', 'concat_cutoff'],
     'missing_vector_strategy': ['skip', 'zeroes'],
-    'normalize_word_vector_length_strategy': ['pad', 'cutoff']
+    'normalize_word_vector_length_strategy': ['pad', 'cutoff'],
+    'distance_metric': ['manhattan', 'euclidean', 'minkowski', 'braycurtis', 'canberra', 'chebyshev', 'correlation', 'jensenshannon', 'cosine']
 }
 unique_dataset_words = get_unique_dataset_words()
 
