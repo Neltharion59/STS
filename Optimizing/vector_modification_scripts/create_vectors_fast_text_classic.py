@@ -10,7 +10,7 @@ from corpora_modification_scripts.Util import get_unique_dataset_words
 unique_dataset_words = get_unique_dataset_words()
 new_vectors = {}
 
-with open('./resources/vector/cc.sk.300.vec', 'r', encoding='utf-8', newline='\n', errors='ignore') as vector_file:
+with open(os.path.join(root_path, './resources/vector/cc.sk.300.vec'), 'r', encoding='utf-8', newline='\n', errors='ignore') as vector_file:
     first = True
     for line in vector_file:
         if first:
@@ -24,4 +24,4 @@ with open('./resources/vector/cc.sk.300.vec', 'r', encoding='utf-8', newline='\n
             vector = [float(token) for token in tokens[1:]]
             new_vectors[word] = vector
 
-write('./resources/vector/fast_text_classic.json', dumps(new_vectors))
+write(os.path.join(root_path, './resources/vector/fast_text_classic.json'), dumps(new_vectors))
