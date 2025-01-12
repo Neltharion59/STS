@@ -20,7 +20,7 @@ args_vector_based = {
     'normalize_word_vector_length_strategy': ['pad', 'cutoff'],
     'distance_metric': ['manhattan', 'euclidean', 'minkowski', 'cosine']
 }
-unique_dataset_words = get_unique_dataset_words()
+unique_dataset_words = list(get_unique_dataset_words().keys())
 
 
 def hal(text1, text2, args, cache):
