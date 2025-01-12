@@ -15,9 +15,10 @@ from corpora_modification_scripts.Util import get_unique_dataset_words
 
 # Arg possibilities for vector-based methods
 args_vector_based = {
-    'vector_merge_strategy': ['add', 'add_pos_weight', 'add_power11_weight', 'concat_pad', 'concat_cutoff'],
-    'missing_vector_strategy': ['skip', 'zeroes'],
-    'normalize_word_vector_length_strategy': ['pad', 'cutoff'],
+    #'vector_merge_strategy': ['add', 'add_pos_weight', 'add_power11_weight', 'concat_pad', 'concat_cutoff'],
+    'vector_merge_strategy': ['add_pos_weight', 'add_power11_weight', 'concat_pad'],
+    'missing_vector_strategy': ['skip'],
+    'normalize_word_vector_length_strategy': ['pad'],
     'distance_metric': ['manhattan', 'euclidean', 'minkowski', 'cosine']
 }
 unique_dataset_words = list(get_unique_dataset_words().keys())

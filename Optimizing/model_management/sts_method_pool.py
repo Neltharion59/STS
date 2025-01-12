@@ -166,7 +166,7 @@ corpus_based_name_list = []
 # Add hal similarity
 name = "hal"
 args_hal = {key: value for (key, value) in args_vector_based.items()}
-args_hal['size'] = ['full', '100', '200', '300', '400', '500', '600', '700', '800']
+args_hal['size'] = ['full', '200', '800']
 add_to_method_pool(name, args_hal, hal, sts_method_pool)
 corpus_based_name_list.append(name)
 # -----------------------------------------------------------------------------
@@ -183,7 +183,7 @@ corpus_based_name_list.append(name)
 # Add disco similarity
 name = "disco"
 args_disco = {key: value for (key, value) in args_vector_based.items()}
-args_disco['version'] = ['raw', 'so_5', 'so_10', 'so_15']
+args_disco['version'] = ['raw', 'so_5', 'so_15']
 add_to_method_pool(name, args_disco, disco, sts_method_pool)
 corpus_based_name_list.append(name)
 # Add openai similarity
