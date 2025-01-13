@@ -268,7 +268,7 @@ def load_lsa_vectors(text1, text2, cache):
         if len(batch_items) == 0:
             continue
 
-        with open('./resources/vector/lsa_full_{0}_1000.txt'.format(batch_id), 'r', encoding='utf-8') as lsa_file:
+        with open(os.path.join(root_path, './resources/vector/lsa_full_{0}_1000.txt'.format(batch_id)), 'r', encoding='utf-8') as lsa_file:
             i = 0
             j = 0
             for line in lsa_file:
