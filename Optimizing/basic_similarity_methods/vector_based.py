@@ -92,12 +92,12 @@ def disco(text1, text2, args, cache):
         if args['version'] == 'raw':
             file_path = './resources/vector/disco_raw.txt'
             lines = read(file_path).split('\n')
-            vectors = {line.split('\t')[0]: [float(num) for num in line.split(',')[1]] for line in lines}
+            vectors = {line.split('\t')[0]: [float(num) for num in line.split('\t')[1].split(',')] for line in lines}
             cache['vectors'] = vectors
         elif args['version'] in ['so_5', 'so_10', 'so_15']:
             file_path_raw = './resources/vector/disco_raw.txt'
             lines_raw = read(file_path_raw).split('\n')
-            vectors_raw = {line.split('\t')[0]: [float(num) for num in line.split('\t')[1]] for line in lines_raw}
+            vectors_raw = {line.split('\t')[0]: [float(num) for num in line.split('\t')[1].split(',')] for line in lines_raw}
 
             file_path_ordered_sims = './resources/vector/disco_lin_sims.json'
             sims = loads(read(file_path_ordered_sims))
