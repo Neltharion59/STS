@@ -68,7 +68,7 @@ def esa(text1, text2, args, cache):
         cache['vector_type'] = 'esa'
         # Load the vectors
         vectors = loads(read('./resources/vector/esa_v1_full.txt'))
-        vectors = {key: [debug(key, num) for num in vectors[key].split(',')] for key in vectors}
+        vectors = {key: [debug(key, num, vectors[key]) for num in vectors[key].split(',')] for key in vectors}
         cache['vectors'] = vectors
 
     v1, v2 = vectorize_text(text1, text2, args, cache)
@@ -77,8 +77,10 @@ def esa(text1, text2, args, cache):
     return distance
 
 
-def debug(key, text):
-    print(key, text)
+def debug(key, text, vectors):
+    if key == 'tvrdý':
+        print(key, text)
+        print(vectors)
     return float(text)
 
 
