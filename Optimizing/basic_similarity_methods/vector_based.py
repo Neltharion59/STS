@@ -68,7 +68,7 @@ def esa(text1, text2, args, cache):
         cache['vector_type'] = 'esa'
         # Load the vectors
         vectors = loads(read('./resources/vector/esa_v1_full.txt'))
-        vectors = {key: [debug(key, num, vectors[key]) for num in vectors[key].split(',')] for key in vectors}
+        vectors = {key: ([float(num) for num in vectors[key].split(',')] if len(vectors[key]) > 0 else []) for key in vectors}
         cache['vectors'] = vectors
 
     v1, v2 = vectorize_text(text1, text2, args, cache)
