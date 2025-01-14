@@ -271,14 +271,14 @@ def load_lsa_vectors(text1, text2, cache):
             i = 0
             j = 0
             for line in lsa_file:
-                print(i, j)
+
                 if i == batch_indices[j]:
                     vector = [int(x) for x in line.replace('\n', '').split('\t')[1].split(',')]
                     batch_items[j]['vector'] = vector
                     j = j + 1
 
                     if j >= len(batch_items):
-                        continue
+                        break
 
                 i = i + 1
 
