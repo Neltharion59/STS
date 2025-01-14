@@ -68,13 +68,21 @@ def esa(text1, text2, args, cache):
         cache['vector_type'] = 'esa'
         # Load the vectors
         vectors = loads(read('./resources/vector/esa_v1_full.txt'))
-        vectors = {key: [float(num) for num in vectors[key].split(',')] for key in vectors}
+        vectors = {key: [debug(num) for num in vectors[key].split(',')] for key in vectors}
         cache['vectors'] = vectors
 
     v1, v2 = vectorize_text(text1, text2, args, cache)
     distance = vector_distance(v1, v2, args['distance_metric'])
 
     return distance
+
+
+def debug(text):
+    print(text)
+    try:
+        return float(text)
+    except ValueError:
+        print('Value Error')
 
 
 def disco(text1, text2, args, cache):
