@@ -171,9 +171,9 @@ add_to_method_pool(name, args_hal, hal, sts_method_pool)
 corpus_based_name_list.append(name)
 # -----------------------------------------------------------------------------
 # Add lsa similarity
-name = "lsa"
-add_to_method_pool(name, args_vector_based, lsa, sts_method_pool)
-corpus_based_name_list.append(name)
+#name = "lsa"
+#add_to_method_pool(name, args_vector_based, lsa, sts_method_pool)
+#corpus_based_name_list.append(name)
 # -----------------------------------------------------------------------------
 # Add esa similarity
 name = "esa"
