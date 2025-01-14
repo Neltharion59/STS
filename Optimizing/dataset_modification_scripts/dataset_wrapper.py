@@ -100,13 +100,6 @@ class Dataset:
         if sts_method.method_name not in results:
             results[sts_method.method_name] = []
 
-        if sts_method.method_name == 'hal':
-            print(sts_method.args)
-            print('-'*20)
-            for x in results[sts_method.method_name]:
-                print(dict_match(x['args'], sts_method.args), ':', x['args'])
-            exit(0)
-
         for x in results[sts_method.method_name]:
             if dict_match(x['args'], sts_method.args):
                 print("Already predicted. Skipping " + sts_method.name)
