@@ -30,8 +30,11 @@ class STSMethod:
     # Params: list<str>, list<str>, dict<str, STSMethod>
     # Return: float...
     def predict_mass(self, text1_array, text2_array, cache):
+        i = 0
         for x, y in zip(text1_array, text2_array):
+            print('Predicting {0}/{1}'.format(i, len(text1_array)))
             yield self.predict(x, y, cache)
+            i = i + 1
 
     # Generate name of this method based on method and param configuration
     # Params: str

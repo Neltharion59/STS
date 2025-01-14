@@ -24,6 +24,7 @@ args_vector_based = {
 unique_dataset_words = [word for word in get_unique_dataset_words()]
 
 
+
 def hal(text1, text2, args, cache):
     if 'vector_type' not in cache or 'vector_subtype' not in cache or 'vectors' not in cache or cache['vector_type'] != 'hal' or cache['vector_subtype'] != args['size'] or cache['vectors'] is None:
         cache['vectors'] = None
@@ -255,37 +256,20 @@ def load_lsa_vectors(text1, text2, cache):
     lemma2 = cache['lemmatizer'].lemmatize(text2)
 
     words = list(set(split_to_words(lemma1) + split_to_words(lemma2)))
-    indices = sorted([{'word': word, 'index': unique_dataset_words.index(word)} for word in words], key=lambda x: x['index'])
-
-    for item in indices:
-        item['batch_id'] = int(item['index']//1000)
+    vectors = {word:[] for word in words}
 
     for batch_id in range(18):
-        batch_items = [item for item in indices if item['batch_id'] == batch_id]
-        batch_indices = [item['index'] for item in batch_items]
-
-        if len(batch_items) == 0:
-            continue
+        if len([word for word in words if len(words[word]) == 0]) == 0:
+            break
 
         with open(os.path.join(root_path, './resources/vector/lsa_full_{0}_1000.txt'.format(batch_id)), 'r', encoding='utf-8') as lsa_file:
-            i = 0
-            j = 0
             for line in lsa_file:
+                tokens = line.replace('\n', '').split('\t')
+                word = tokens[0]
 
-                if i == batch_indices[j]:
-                    vector = [int(x) for x in line.replace('\n', '').split('\t')[1].split(',')]
-                    batch_items[j]['vector'] = vector
-                    j = j + 1
-
-                    if j >= len(batch_items):
-                        break
-
-                i = i + 1
-
-    if len([item for item in indices if 'vector' not in item]) > 0:
-        raise ValueError('No LSA vectors found for items: {0}'.format([item for item in indices if 'vector' not in item]))
-
-    vectors = {item['word']: item['vector'] for item in indices}
+                if word in words:
+                    vector = [int(x) for x in tokens[1].split(',')]
+                    vectors[word] = vector
 
     return vectors
 
