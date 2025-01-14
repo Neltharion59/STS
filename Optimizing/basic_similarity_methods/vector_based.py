@@ -77,10 +77,9 @@ def esa(text1, text2, args, cache):
     return distance
 
 
-def debug(key, text, vectors):
-    if key == 'tvrdý':
-        print(key, text)
-        print(vectors)
+def debug(key, text, vector):
+    print(key, text)
+    print(vector)
     return float(text)
 
 
