@@ -33,7 +33,6 @@ def hal(text1, text2, args, cache):
         if 'size' not in args:
             raise ValueError('Size not present in args when calculating with HAL vectors')
 
-        args['size'] = '300'
         if args['size'] == 'full':
             file_path = './resources/vector/hal_full.json'
         elif args['size'] in ['100', '200', '300', '400', '500', '600', '700', '800']:

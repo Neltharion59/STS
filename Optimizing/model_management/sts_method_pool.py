@@ -166,7 +166,7 @@ corpus_based_name_list = []
 # Add hal similarity
 name = "hal"
 args_hal = {key: value for (key, value) in args_vector_based.items()}
-args_hal['size'] = ['full', '200', '800']
+args_hal['size'] = ['full', '300', '800']
 add_to_method_pool(name, args_hal, hal, sts_method_pool)
 corpus_based_name_list.append(name)
 # -----------------------------------------------------------------------------
