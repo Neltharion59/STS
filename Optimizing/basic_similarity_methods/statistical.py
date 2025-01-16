@@ -48,17 +48,13 @@ def pmi(text1, text2, args, cache):
 def pmi_single(w1, w2, cache):
     occurence1 = cache['word_occurences'][w1]
     occurence2 = cache['word_occurences'][w2]
-    pair = sorted([w1, w2])
 
-    print(pair[0] in cache['word_co_occurences'], ' ', len(list(cache['word_co_occurences'].keys())))
-    if pair[0] in cache['word_co_occurences']:
-        print(pair[1] in cache['word_co_occurences'][pair[0]], ' ', len(list(cache['word_co_occurences'][pair[0]].keys())))
-
-    print(pair[1] in cache['word_co_occurences'], ' ', len(list(cache['word_co_occurences'].keys())))
-    if pair[1] in cache['word_co_occurences']:
-        print(pair[0] in cache['word_co_occurences'][pair[1]], ' ', len(list(cache['word_co_occurences'][pair[1]].keys())))
-
-    co_occurence = cache['word_co_occurences'][pair[0]][pair[1]]
+    if w1 in cache['word_occurences'] and w2 in cache['word_occurences'][w1]:
+        co_occurence = cache['word_co_occurences'][w1][w2]
+    elif w2 in cache['word_occurences'] and w1 in cache['word_occurences'][w2]:
+        co_occurence = cache['word_co_occurences'][w2][w1]
+    else:
+        co_occurence = 0
 
     normalized_to_minus1_1 = max(0, log2(co_occurence/(occurence1 * occurence2)))/log2(co_occurence) if log2(co_occurence) != 0 else 0
     normalized_to_0_1 = (normalized_to_minus1_1 + 1)/2
