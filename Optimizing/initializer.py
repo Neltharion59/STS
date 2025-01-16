@@ -7,7 +7,7 @@ from shutil import copyfile
 # Download WordNet library
 nltk.download('wordnet')
 # Download OMW WordNets
-nltk.download('omw')
+nltk.download('omw-1.4')
 
 # Create entry for Slovak ('slk')
 resource_path = ".\\resources\slk_wordnet"
