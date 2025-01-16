@@ -56,6 +56,11 @@ def pmi_single(w1, w2, cache):
     else:
         co_occurence = 0
 
-    normalized_to_minus1_1 = max(0, log2(co_occurence/(occurence1 * occurence2)))/log2(co_occurence) if log2(co_occurence) != 0 else 0
+    v = occurence1 * occurence2
+    x = co_occurence/v if v != 0 else 0
+    y = log2(x) if x > 0 else 0
+    z = log2(co_occurence) if co_occurence > 0 else 0
+    w = y/z if z != 0 else 0
+    normalized_to_minus1_1 = max(0.0, w)
     normalized_to_0_1 = (normalized_to_minus1_1 + 1)/2
     return normalized_to_0_1
