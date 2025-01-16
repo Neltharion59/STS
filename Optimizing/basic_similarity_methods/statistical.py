@@ -49,9 +49,9 @@ def pmi_single(w1, w2, cache):
     occurence1 = cache['word_occurences'][w1]
     occurence2 = cache['word_occurences'][w2]
 
-    if w1 in cache['word_occurences'] and w2 in cache['word_occurences'][w1]:
+    if w1 in cache['word_co_occurences'] and w2 in cache['word_co_occurences'][w1]:
         co_occurence = cache['word_co_occurences'][w1][w2]
-    elif w2 in cache['word_occurences'] and w1 in cache['word_occurences'][w2]:
+    elif w2 in cache['word_co_occurences'] and w1 in cache['word_co_occurences'][w2]:
         co_occurence = cache['word_co_occurences'][w2][w1]
     else:
         co_occurence = 0
