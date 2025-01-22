@@ -88,7 +88,7 @@ def calculate_knowledge_similarity_sentence(text1, text2, similarity_func_synset
 def wu_palmer_similarity_sentence(sentence1, sentence2, args, cache):
     # Call the uniformly processing function to calculate the value
     result = calculate_knowledge_similarity_sentence(
-        sentence1, sentence2, lambda syn1, syn2: wup(syn1, syn2), args, cache
+        sentence1, sentence2, lambda syn1, syn2: None if syn1.pos != syn2.pos else wup(syn1, syn2), args, cache
     )
 
     return result
@@ -100,7 +100,7 @@ def wu_palmer_similarity_sentence(sentence1, sentence2, args, cache):
 def path_similarity_sentence(sentence1, sentence2, args, cache):
     # Call the uniformly processing function to calculate the value
     result = calculate_knowledge_similarity_sentence(
-        sentence1, sentence2, lambda syn1, syn2: path(syn1, syn2), args, cache
+        sentence1, sentence2, lambda syn1, syn2: None if syn1.pos != syn2.pos else path(syn1, syn2), args, cache
     )
 
     return result
