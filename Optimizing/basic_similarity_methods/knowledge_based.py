@@ -1,14 +1,22 @@
 # Library-like script providing knowledge-based similarity methods
+import os
+root_path = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
+import sys
+sys.path.append(root_path)
+
+import wn, wn.taxonomy
+from wn.similarity import path, lch, wup
 
 from util.math import average, none_2_zero
-from nltk.corpus import wordnet as wn
+from corpora_modification_scripts.Util import split_to_words
+
 
 # Arg possibilities for knowledge-based methods
 args_knowledge = {
     "synset_choice": ['1st_synsets', 'all_synsets'],
     "weighting": ['distance', 'ordinary'],
     "aggregation_operation": ['avg', 'max'],
-    "wordnet": ['slk']
+    "wordnet": ['omw-sk:1.4']
 }
 
 # Defines maximum possible value of Leacock-Chodorow similarity
@@ -20,7 +28,7 @@ leacock_chodorow_similarity_cap = 3.6375861597263857
 # Provides convenient unified processing regardless of what method is used.
 # Params: str, str, func<synset, synset> -> float, dict<str, str>
 # Return: float
-def calculate_knowledge_similarity_sentence(sentence1, sentence2, similarity_func_synset, args):
+def calculate_knowledge_similarity_sentence(text1, text2, similarity_func_synset, args, cache):
     for arg in args:
         if arg not in args_knowledge:
             raise ValueError('Knowledge-based method received unknown argument - \'{}\''.format(arg))
@@ -28,12 +36,18 @@ def calculate_knowledge_similarity_sentence(sentence1, sentence2, similarity_fun
             raise ValueError('Knowledge-based method argument \'{}\' has unknown value - \'{}\''.format(arg, args[arg]))
 
     # Let's turn text into list of words
-    words1 = sentence1.split(' ')
-    words2 = sentence2.split(' ')
+    lemma1 = cache['lemmatizer'].lemmatize(text1)
+    lemma2 = cache['lemmatizer'].lemmatize(text2)
+
+    words1 = split_to_words(lemma1)
+    words2 = split_to_words(lemma2)
+
+    if args['wordnet'] not in cache:
+        cache[args['wordnet']] = wn.Wordnet('omw-sk:1.4')
 
     # Prepare list of synsets for each word
-    synsets1 = [wn.synsets(word, lang=args['wordnet']) for word in words1]
-    synsets2 = [wn.synsets(word, lang=args['wordnet']) for word in words2]
+    synsets1 = [cache[args['wordnet']].synsets(word) for word in words1]
+    synsets2 = [cache[args['wordnet']].synsets(word) for word in words2]
 
     # If we only accept first syset of each word, let's get rid of other synsets
     if args['synset_choice'] == '1st_synsets':
@@ -74,7 +88,7 @@ def calculate_knowledge_similarity_sentence(sentence1, sentence2, similarity_fun
 def wu_palmer_similarity_sentence(sentence1, sentence2, args, cache):
     # Call the uniformly processing function to calculate the value
     result = calculate_knowledge_similarity_sentence(
-        sentence1, sentence2, lambda syn1, syn2: syn1.wup_similarity(syn2), args
+        sentence1, sentence2, lambda syn1, syn2: wup(syn1, syn2), args, cache
     )
 
     return result
@@ -86,7 +100,7 @@ def wu_palmer_similarity_sentence(sentence1, sentence2, args, cache):
 def path_similarity_sentence(sentence1, sentence2, args, cache):
     # Call the uniformly processing function to calculate the value
     result = calculate_knowledge_similarity_sentence(
-        sentence1, sentence2, lambda syn1, syn2: syn1.path_similarity(syn2), args
+        sentence1, sentence2, lambda syn1, syn2: path(syn1, syn2), args, cache
     )
 
     return result
@@ -98,7 +112,7 @@ def path_similarity_sentence(sentence1, sentence2, args, cache):
 def leacock_chodorow_similarity_sentence(sentence1, sentence2, args, cache):
     # Call the uniformly processing function to calculate the value
     result = calculate_knowledge_similarity_sentence(
-        sentence1, sentence2, lambda syn1, syn2: None if syn1.pos() != syn2.pos() else (min(1, none_2_zero(syn1.lch_similarity(syn2))/leacock_chodorow_similarity_cap)), args
+        sentence1, sentence2, lambda syn1, syn2: None if syn1.pos != syn2.pos else lch(syn1, syn2, wn.taxonomy.taxonomy_depth(cache[args['wordnet']], syn1.pos)), args, cache
     )
 
     return result
