@@ -112,7 +112,7 @@ def path_similarity_sentence(sentence1, sentence2, args, cache):
 def leacock_chodorow_similarity_sentence(sentence1, sentence2, args, cache):
     # Call the uniformly processing function to calculate the value
     result = calculate_knowledge_similarity_sentence(
-        sentence1, sentence2, lambda syn1, syn2: None if syn1.pos != syn2.pos else lch(syn1, syn2, 10, syn1.pos), simulate_root=True), args, cache
+        sentence1, sentence2, lambda syn1, syn2: None if syn1.pos != syn2.pos else lch(syn1, syn2, 10, simulate_root=True), args, cache
     )
 
     return result
