@@ -11,28 +11,25 @@ import os
 import sys
 from datetime import datetime
 
-from joblib import dump
 from sklearn.exceptions import ConvergenceWarning
 from sklearn.utils._testing import ignore_warnings
-
 from Hive import Hive
+from playsound import playsound
 
 from util.math import average
 from complex_similarity_methods.dataset_fragmentation import FragmentedDatasetCV, FragmentedDatasetSuper
-from complex_similarity_methods.dataset_split_ratio import DatasetSplitRatio
 from dataset_modification_scripts.dataset_wrapper import gold_standard_name
 from dataset_modification_scripts.dataset_pool import dataset_pool
 from evaluation.evaluate_regression_metrics import pearson
 from model_management.persistent_id_generator import PersistentIdGenerator
 from model_management.sts_model_pool import model_types
+from util.file_handling import write, exists, read
 
-from playsound import playsound
 
 path_to_optimizer_run_record_folder = os.path.join(root_path, 'resources/optimizer_runs')
 
 # Configuration - parameters of optimization
-dataset_split_ratio = DatasetSplitRatio(0.70, 0.30)
-cross_validation_fold_count = 4
+cross_validation_fold_count = 10
 fitness_metric = {
     'name': 'pearson',
     'method': pearson
@@ -44,8 +41,6 @@ iteration_cap = 100
 algorithm_run = {
     'run_id': PersistentIdGenerator('optimizer_run').next_id(),
     'config': {
-        'train_ratio': dataset_split_ratio.train_ratio,
-        'valid_ratio': dataset_split_ratio.validation_ratio,
         'CV_fold_count': cross_validation_fold_count,
         'fitness_metric': fitness_metric['name'],
         'optimizer': {
@@ -78,12 +73,7 @@ model_id_generator = PersistentIdGenerator('model_persistence')
 # Return: None
 def load_optimizer_run(run_id):
     try:
-        with open(
-            '{}optimizer_run_{}.txt'.format(path_to_optimizer_run_record_folder, run_id),
-            'r',
-            encoding='utf-8'
-        ) as file:
-            txt_dump = file.read()
+        txt_dump = read('{}optimizer_run_{}.txt'.format(path_to_optimizer_run_record_folder, run_id))
         print('--- OLD --- Run with id {} exists. Let\'s continue where we dropped off'.format(run_id))
         global algorithm_run
         algorithm_run = json.loads(txt_dump)
@@ -95,15 +85,8 @@ def load_optimizer_run(run_id):
 # Params:
 # Return: None
 def persist_optimizer_run():
-    txt_dump = json.dumps(algorithm_run)
-    with open(
-        '{}optimizer_run_{}.txt'.format(path_to_optimizer_run_record_folder, algorithm_run['run_id']),
-        'w+',
-        encoding='utf-8'
-    ) as file:
-        file.write(txt_dump)
-        file.flush()
-        os.fsync(file)
+    txt_dump = json.dumps(algorithm_run, indent=4)
+    write('{}optimizer_run_{}.txt'.format(path_to_optimizer_run_record_folder, algorithm_run['run_id']), txt_dump)
 
 
 # FITNESS FUNCTION
@@ -176,11 +159,10 @@ def solution_evaluator(vector):
         return 2
 
     # Determine the metric and the model best representing the configuration
-    metric_avg_test = average(metric_values_test)
-    average_model = models[min(range(len(models)), key=lambda x: abs(metric_avg_test - metric_values_test[x]))]
+    metric_test_max = max(metric_values_test)
 
     # Calculating final fitness is simple
-    fitness = 1 - metric_avg_test
+    fitness = 1 - metric_test_max
 
     # If this model is the current best, let's save it
     if best_model is None or fitness < best_model['fitness']:
@@ -188,8 +170,7 @@ def solution_evaluator(vector):
             'vector': vector,
             'inputs': [{'method_name': x['method_name'], 'args': x['args']} for x in inputs],
             'fitness': fitness,
-            'hyperparams': param_dict,
-            'model': average_model
+            'hyperparams': param_dict
         }
 
     return fitness
@@ -220,27 +201,11 @@ def run_optimization():
         algorithm_run['main'][key][dataset.name]['models'] = {}
 
     # Persist the model
-    model_id = model_id_generator.next_id()
-    best_model['id'] = model_id
-
     global model_type
     best_model['type'] = model_type['name']
 
-    global split_dataset_master
-    best_model['validation'] = {
-        'features': split_dataset_master.Validation.features,
-        'labels': split_dataset_master.Validation.labels
-    }
-    dump(best_model['model'],  os.path.join(root_path, "resources/models/model_{}.jolib".format(model_id)))
-    del best_model['model']
-
-    model_info_dump = json.dumps(best_model)
-    with open(os.path.join(root_path, 'resources/models/model_{}.json'.format(best_model['id'])), 'w+', encoding='utf-8') as file:
-
-        file.write(model_info_dump)
-
     # Record the model in the optimizer run record object.
-    algorithm_run['main'][key][dataset.name]['models'][model_type['name']]['best_model_id'] = best_model['id']
+    algorithm_run['main'][key][dataset.name]['models'][model_type['name']]['best_model'] = best_model
     algorithm_run['main'][key][dataset.name]['models'][model_type['name']]['fitness_history'] = cost
     algorithm_run['main'][key][dataset.name]['models'][model_type['name']]['last_population'] = [x.vector for x in model.population]
 
@@ -257,6 +222,8 @@ total_counter = 1
 total_counter_max = dataset_counter_max * model_in_dataset_counter_max
 
 global_start = datetime.now()
+
+split_dataset_file_pattern = 'resources/split_datasets/split_dataset_{0}_{1}_sk.json'
 try:
     # For each dataset version (raw vs. lemma)
     for key in dataset_pool:
@@ -267,6 +234,11 @@ try:
         for dataset in dataset_pool[key]:
             if dataset.name not in algorithm_run['main'][key]:
                 algorithm_run['main'][key][dataset.name] = {}
+
+            split_dataset_master_json = json.loads(split_dataset_file_pattern.format(dataset.name, key))
+
+            split_dataset_master = FragmentedDatasetSuper()
+            split_dataset_master.from_json(split_dataset_master_json)
 
             model_in_dataset_counter = 1
             # For each model type
@@ -292,19 +264,6 @@ try:
                     gold_values_temp = [round(x / 5, ndigits=3) for x in
                                         persisted_methods_temp[gold_standard_name][0]['values']]
                     del persisted_methods_temp[gold_standard_name]
-
-                    # Make sure that we use correct vectors based on raw/lemma
-                    for method_name in persisted_methods_temp:
-                        for i in range(len(persisted_methods_temp[method_name])):
-                            if 'corpus' in persisted_methods_temp[method_name][i]['args']:
-                                if key == 'lemma':
-                                    persisted_methods_temp[method_name][i]['args']['corpus'] = persisted_methods_temp[method_name][i]['args']['corpus'].replace('_sk.txt', '_sk_lemma.txt')
-                                else:
-                                    persisted_methods_temp[method_name][i]['args']['corpus'] = persisted_methods_temp[method_name][i]['args']['corpus'].replace('_sk_lemma.txt', '_sk.txt')
-
-                    # Split dataset to train and validation set
-                    split_dataset_master = FragmentedDatasetSuper(persisted_methods_temp, gold_values_temp,
-                                                                  dataset_split_ratio)
 
                     # Prepare helpful values for more concise programming later
                     sorted_method_group_names = sorted(persisted_methods_temp.keys())

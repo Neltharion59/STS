@@ -119,10 +119,15 @@ class SingleFoldDatasetFragment:
 # Cute little class that wraps dataset split to validation subset and CV-ready subset for training
 # (and performs the split).
 class FragmentedDatasetSuper:
+    def __init__(self):
+        self.Train = None
+        self.Validation = None
+        pass
+
     # Constructor
     # Params: dict<str, dict<str, any>>, list<float>, DatasetSplitRatio
     # Return: FragmentedDatasetSuper
-    def __init__(self, available_methods, gold_values, split_ratio):
+    def from_full_dataset(self, available_methods, gold_values, split_ratio):
         dataset_size = len(available_methods[list(available_methods.keys())[0]][0]['values'])
         # Make sure that the data is consistent it terms of size
         for method_name in available_methods:
@@ -168,3 +173,7 @@ class FragmentedDatasetSuper:
         # Wrap in classes.
         self.Train = SingleDatasetFragment(reordered_gold_train, reordered_train)
         self.Validation = SingleDatasetFragment(reordered_gold_valid, reordered_valid)
+
+    def from_json(self, json_split):
+        self.Train = SingleDatasetFragment(json_split['Train']['labels'], json_split['Train']['features'])
+        self.Validation = SingleDatasetFragment(json_split['Validate']['labels'], json_split['Validate']['features'])

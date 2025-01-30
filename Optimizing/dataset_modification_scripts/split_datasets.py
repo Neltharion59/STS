@@ -19,7 +19,7 @@ dataset_split_ratio = DatasetSplitRatio(0.80, 0.20)
 for key in dataset_pool:
     # For each dataset
     for dataset in dataset_pool[key]:
-        dataset_path = dataset_file_pattern.format(dataset, key)
+        dataset_path = dataset_file_pattern.format(dataset.name, key)
 
         if not exists(dataset_path):
             continue
@@ -28,10 +28,11 @@ for key in dataset_pool:
         gold_values_temp = [round(x / 5, ndigits=3) for x in persisted_methods_temp[gold_standard_name][0]['values']]
         del persisted_methods_temp[gold_standard_name]
 
-        split_dataset_master = FragmentedDatasetSuper(persisted_methods_temp, gold_values_temp, dataset_split_ratio)
+        split_dataset_master = FragmentedDatasetSuper()
+        split_dataset_master.from_full_dataset(persisted_methods_temp, gold_values_temp, dataset_split_ratio)
 
         split_dataset_json = {
-            'DatasetName': dataset,
+            'DatasetName': dataset.name,
             'DatasetVersion': key,
             'Language': 'sk',
             'TrainRatio': dataset_split_ratio.train_ratio,
