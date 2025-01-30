@@ -23,3 +23,15 @@ def read(sub_path):
     with open(path, 'r', encoding='utf-8') as file:
         result = file.read()
     return result
+
+
+def exists(sub_path):
+    path = os.path.join(root_path, sub_path)
+    try:
+        with open(path, 'r', encoding='utf-8') as file:
+            for _ in file:
+                break
+    except FileNotFoundError:
+        return False
+
+    return True

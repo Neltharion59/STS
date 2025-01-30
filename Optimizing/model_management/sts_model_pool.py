@@ -60,16 +60,16 @@ model_types = [
         }
     },
     # Was not used in the end, as model-persisting libraries had trouble with kernels
-    {
-        "name": "gaussian_process_regression",
-        "model": GaussianProcessRegressor,
-        "args": {
-            'kernel':
-                [WhiteKernel(), DotProduct(), Matern(), RationalQuadratic(), ExpSineSquared(), RBF()],
-            'alpha': [x * (10 ** -y) for x in [1, 2, 5] for y in [1, 2, 3]],
-            'n_restarts_optimizer': [0, 1, 2]
-        }
-    },
+    # {
+    #     "name": "gaussian_process_regression",
+    #     "model": GaussianProcessRegressor,
+    #     "args": {
+    #         'kernel':
+    #             [WhiteKernel(), DotProduct(), Matern(), RationalQuadratic(), ExpSineSquared(), RBF()],
+    #         'alpha': [x * (10 ** -y) for x in [1, 2, 5] for y in [1, 2, 3]],
+    #         'n_restarts_optimizer': [0, 1, 2]
+    #     }
+    # },
     {
         "name": "random_forest_regression",
         "model": RandomForestRegressor,
