@@ -26,7 +26,7 @@ from model_management.sts_model_pool import model_types
 from util.file_handling import write, exists, read
 
 
-path_to_optimizer_run_record_folder = os.path.join(root_path, 'resources/optimizer_runs')
+path_to_optimizer_run_record_folder = os.path.join(root_path, 'resources/optimizer_runs/')
 dataset_file_pattern = 'resources/split_datasets/split_dataset_{0}_{1}_sk.json'
 
 # Configuration - parameters of optimization
@@ -168,9 +168,9 @@ def solution_evaluator(vector):
     # If this model is the current best, let's save it
     if best_model is None or fitness < best_model['fitness']:
         best_model = {
-            'vector': vector,
             'inputs': [{'method_name': x['method_name'], 'args': x['args']} for x in inputs],
             'fitness': fitness,
+            'pearson': metric_test_max,
             'hyperparams': param_dict
         }
 
@@ -208,7 +208,6 @@ def run_optimization():
     # Record the model in the optimizer run record object.
     algorithm_run['main'][key][dataset.name]['models'][model_type['name']]['best_model'] = best_model
     algorithm_run['main'][key][dataset.name]['models'][model_type['name']]['fitness_history'] = cost
-    algorithm_run['main'][key][dataset.name]['models'][model_type['name']]['last_population'] = [x.vector for x in model.population]
 
 
 # Try to load the optimizer run (if there is already a run with this ID)
