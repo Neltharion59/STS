@@ -264,9 +264,8 @@ try:
                     dataset_file_path = dataset_file_pattern.format(dataset.name, key)
                     persisted_values = json.loads(read(dataset_file_path))
 
-                    persisted_methods_temp = persisted_values
-                    gold_values_temp = persisted_values[gold_standard_name][0]['values']
-                    del persisted_methods_temp[gold_standard_name]
+                    persisted_methods_temp = persisted_values['Train']['features']
+                    gold_values_temp = persisted_values['Train']['labels']
 
                     # Prepare helpful values for more concise programming later
                     sorted_method_group_names = sorted(persisted_methods_temp.keys())
