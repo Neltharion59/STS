@@ -21,7 +21,7 @@ for key in dataset_pool:
     for dataset in dataset_pool[key]:
         dataset_path = dataset_file_pattern.format(dataset.name, key)
 
-        if not exists(dataset_path):
+        if exists(dataset_path):
             continue
 
         persisted_methods_temp = dataset.load_values()
