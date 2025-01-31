@@ -29,7 +29,7 @@ for dataset_version in dataset_pool:
                     print('MIN Issues with ', method, '. ', perc, '%')
                     issues = True
 
-                if len([math.isnan(x) for x in vector]) > 0:
+                if len([x for x in vector if math.isnan(x)]) > 0:
                     perc = len([x for x in vector if math.isnan(x)]) / len(vector) * 100
                     print('NAN Issues with ', method, '. ', perc, '%')
                     issues = True
