@@ -27,6 +27,7 @@ from util.file_handling import write, exists, read
 
 
 path_to_optimizer_run_record_folder = os.path.join(root_path, 'resources/optimizer_runs')
+dataset_file_pattern = 'resources/split_datasets/split_dataset_{0}_{1}_sk.json'
 
 # Configuration - parameters of optimization
 cross_validation_fold_count = 10
@@ -35,7 +36,7 @@ fitness_metric = {
     'method': pearson
 }
 bee_count = 100
-iteration_cap = 100
+iteration_cap = 1
 
 # Optimization run record object that will be persisted.
 algorithm_run = {
@@ -260,9 +261,11 @@ try:
                     algorithm_run['main'][key][dataset.name]['models'][model_type['name']] = {}
 
                     # Load available values for this dataset
-                    persisted_methods_temp = dataset.load_values()
-                    gold_values_temp = [round(x / 5, ndigits=3) for x in
-                                        persisted_methods_temp[gold_standard_name][0]['values']]
+                    dataset_file_path = dataset_file_pattern.format(dataset.name, key)
+                    persisted_values = json.loads(read(dataset_file_path))
+
+                    persisted_methods_temp = persisted_values
+                    gold_values_temp = persisted_values[gold_standard_name][0]['values']
                     del persisted_methods_temp[gold_standard_name]
 
                     # Prepare helpful values for more concise programming later
