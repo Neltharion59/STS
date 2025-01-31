@@ -16,9 +16,7 @@ from sklearn.utils._testing import ignore_warnings
 from Hive import Hive
 from playsound import playsound
 
-from util.math import average
 from complex_similarity_methods.dataset_fragmentation import FragmentedDatasetCV, FragmentedDatasetSuper
-from dataset_modification_scripts.dataset_wrapper import gold_standard_name
 from dataset_modification_scripts.dataset_pool import dataset_pool
 from evaluation.evaluate_regression_metrics import pearson
 from model_management.persistent_id_generator import PersistentIdGenerator
@@ -36,7 +34,7 @@ fitness_metric = {
     'method': pearson
 }
 bee_count = 100
-iteration_cap = 1
+iteration_cap = 100
 
 # Optimization run record object that will be persisted.
 algorithm_run = {
