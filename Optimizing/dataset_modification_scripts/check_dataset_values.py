@@ -20,15 +20,18 @@ for dataset_version in dataset_pool:
 
                 issues = False
                 if max(vector) > 1.0:
-                    print('MAX Issues with ', method)
+                    perc = len([x for x in vector if x > 1.0])/len(vector) * 100
+                    print('MAX Issues with ', method, '. ', perc, '%')
                     issues = True
 
                 if min(vector) < 0.0:
-                    print('MIN Issues with ', method)
+                    perc = len([x for x in vector if x < 0.0]) / len(vector) * 100
+                    print('MIN Issues with ', method, '. ', perc, '%')
                     issues = True
 
                 if len([math.isnan(x) for x in vector]) > 0:
-                    print('NAN Issues with ', method)
+                    perc = len([x for x in vector if math.isnan(x)]) / len(vector) * 100
+                    print('NAN Issues with ', method, '. ', perc, '%')
                     issues = True
 
                 if issues:
