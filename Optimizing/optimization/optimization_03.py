@@ -196,7 +196,7 @@ def run_optimization():
     optimizer_end = datetime.now()
     print('Optimization took: {}'.format(optimizer_end - optimizer_start))
 
-    print("Best model:\n\tFitness: {}\n\tSolution: {}".format(best_model['fitness'], best_model['vector']))
+    print("Best model:\n\tFitness: {}".format(best_model['fitness']))
 
     if 'models' not in algorithm_run['main'][key][dataset.name]:
         algorithm_run['main'][key][dataset.name]['models'] = {}
