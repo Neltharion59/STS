@@ -235,7 +235,7 @@ try:
             if dataset.name not in algorithm_run['main'][key]:
                 algorithm_run['main'][key][dataset.name] = {}
 
-            split_dataset_master_json = json.loads(split_dataset_file_pattern.format(dataset.name, key))
+            split_dataset_master_json = json.loads(read(split_dataset_file_pattern.format(dataset.name, key)))
 
             split_dataset_master = FragmentedDatasetSuper()
             split_dataset_master.from_json(split_dataset_master_json)
