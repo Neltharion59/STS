@@ -197,9 +197,9 @@ name = "fast_text"
 add_to_method_pool(name, args_vector_based, fast_text, sts_method_pool)
 corpus_based_name_list.append(name)
 # Add PMI similarity
-name = "pmi"
-add_to_method_pool(name, args_pmi, pmi, sts_method_pool)
-corpus_based_name_list.append(name)
+# name = "pmi"
+# add_to_method_pool(name, args_pmi, pmi, sts_method_pool)
+# corpus_based_name_list.append(name)
 # -----------------------------------------------------------------------------
 # ------------------------   KNOWLEDGE   --------------------------------------
 # -----------------------------------------------------------------------------

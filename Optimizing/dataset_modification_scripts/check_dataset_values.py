@@ -3,7 +3,6 @@ root_path = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
 import sys
 sys.path.append(root_path)
 
-import math
 from json import loads, dumps
 
 from dataset_modification_scripts.dataset_pool import dataset_pool
@@ -42,7 +41,7 @@ for dataset_version in dataset_pool:
 
                     # Vector-based values - They are distances right now, not similarities
                     if method in corpus_based_name_list:
-                        vector = [1 - x for x in vector]
+                        vector = [1.0 - x for x in vector]
                         modified = True
 
                     if modified:
