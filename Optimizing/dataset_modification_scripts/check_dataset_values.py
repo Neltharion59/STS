@@ -7,6 +7,7 @@ import math
 from json import loads, dumps
 
 from dataset_modification_scripts.dataset_pool import dataset_pool
+from model_management.sts_method_pool import corpus_based_name_list
 from util.file_handling import write, read
 
 dataset_file_pattern = 'resources/split_datasets/split_dataset_{0}_{1}_sk.json'
@@ -37,6 +38,11 @@ for dataset_version in dataset_pool:
                     max_value = max(vector)
                     if max_value > 1.0:
                         vector = [x/max_value for x in vector]
+                        modified = True
+
+                    # Vector-based values - They are distances right now, not similarities
+                    if method in corpus_based_name_list:
+                        vector = [1 - x for x in vector]
                         modified = True
 
                     if modified:
