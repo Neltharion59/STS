@@ -16,7 +16,7 @@ from sklearn.utils._testing import ignore_warnings
 from Hive import Hive
 from playsound import playsound
 
-from complex_similarity_methods.dataset_fragmentation import FragmentedDatasetCV, FragmentedDatasetSuper
+from complex_similarity_methods.dataset_fragmentation_03 import FragmentedDatasetCV, FragmentedDatasetSuper
 from dataset_modification_scripts.dataset_pool import dataset_pool
 from evaluation.evaluate_regression_metrics import pearson
 from model_management.persistent_id_generator import PersistentIdGenerator
@@ -29,7 +29,7 @@ path_to_optimizer_run_record_folder = os.path.join(root_path, 'resources/optimiz
 dataset_file_pattern = 'resources/split_datasets/split_dataset_{0}_{1}_sk.json'
 
 # Configuration - parameters of optimization
-cross_validation_fold_count = 10
+cross_validation_fold_count = 2
 fitness_metric = {
     'name': 'pearson',
     'method': pearson
@@ -59,6 +59,7 @@ split_dataset_master = None
 sorted_method_group_names = None
 method_count = None
 method_param_counts = None
+dataset_fragments = None
 
 # Dataset&Model-specific
 sorted_arg_names = None
@@ -126,8 +127,7 @@ def solution_evaluator(vector):
         if temp_vector[temp_vector_starting_index + i] < method_param_counts[i]:
             inputs.append({
                 'method_name': sorted_method_group_names[i],
-                'args': split_dataset_master.Train.features[sorted_method_group_names[i]][temp_vector[temp_vector_starting_index + i]]['args'],
-                'values': split_dataset_master.Train.features[sorted_method_group_names[i]][temp_vector[temp_vector_starting_index + i]]['values']
+                'args': temp_vector_starting_index + i
             })
 
     # Less than two features wouldn't make a very good model.
@@ -135,13 +135,15 @@ def solution_evaluator(vector):
         return 2
 
     # Prepare data for model - split to folds of CV
-    dataset_fragments = FragmentedDatasetCV(inputs, split_dataset_master.Train.labels, cross_validation_fold_count)
     metric_values_test = []
     models = []
+
+    cv_subset = dataset_fragments.produce_subset(inputs)
+
     # Perform CV
-    for k in range(len(dataset_fragments.folds)):
+    for k in range(cv_subset.fold_count):
         # Prepare train and test set for this fold
-        model_data = dataset_fragments.produce_split_dataset(k).produce_sklearn_ready_data()
+        model_data = cv_subset.produce_split_dataset(k).produce_sklearn_ready_data()
 
         # Prepare and train the model
         model = model_type['model'](**param_dict)
@@ -239,6 +241,9 @@ try:
             split_dataset_master = FragmentedDatasetSuper()
             split_dataset_master.from_json(split_dataset_master_json)
 
+            dataset_fragments = FragmentedDatasetCV()
+            dataset_fragments.from_full_dataset(split_dataset_master.Train.features, split_dataset_master.Train.labels, cross_validation_fold_count)
+
             model_in_dataset_counter = 1
             # For each model type
             for model_type in model_types:
@@ -295,6 +300,8 @@ try:
 
                 model_in_dataset_counter = model_in_dataset_counter + 1
                 total_counter = total_counter + 1
+
+            algorithm_run['main'][key][dataset.name]['fold_indices'] = dataset_fragments.fold_indices
 
             dataset_counter = dataset_counter + 1
 
