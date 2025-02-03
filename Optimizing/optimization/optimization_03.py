@@ -207,6 +207,7 @@ def run_optimization():
     algorithm_run['main'][key][dataset.name]['models'][model_type['name']]['best_model'] = best_model
     algorithm_run['main'][key][dataset.name]['models'][model_type['name']]['fitness_history'] = cost
 
+print(model_types)
 
 # Try to load the optimizer run (if there is already a run with this ID)
 load_optimizer_run(algorithm_run['run_id'])
