@@ -93,6 +93,8 @@ class FragmentedDatasetCV:
         subset = FragmentedDatasetCVSubset()
         subset.from_data(self.fold_labels, transposed)
 
+        return subset
+
     # Produce dataset where n-th fold is the testing set.
     # Params: int
     # Return: SingleFoldDatasetFragment
