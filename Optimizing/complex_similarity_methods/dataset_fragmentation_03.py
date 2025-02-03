@@ -73,7 +73,21 @@ class FragmentedDatasetCV:
         self.fold_features = fold_features
 
     def produce_subset(self, inputs):
-        features = [[self.fold_features[x['method_name']][x['arg_index']]['values'][i] for x in inputs] for i in range(self.k_fold)]
+        features = []
+
+        for i in range(self.k_fold):
+            fold_features = []
+
+            for x in inputs:
+                method_name = x['method_name']
+                arg_index = x['arg_index']
+                method_variations = self.fold_features[method_name]
+                values = method_variations[arg_index]['values']
+                value = values[i]
+                fold_features.append(value)
+
+            features.append(fold_features)
+
         transposed = [[list(row) for row in zip(*features[i])] for i in range(self.k_fold)]
 
         subset = FragmentedDatasetCVSubset()
