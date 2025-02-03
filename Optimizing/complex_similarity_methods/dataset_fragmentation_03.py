@@ -153,7 +153,6 @@ class SingleFoldDatasetFragment:
         # Prepare train subset.
         skl_ready_labels = np.array(self.train.labels)
         skl_ready_features = np.array(self.train.features)
-        print("Shape of array:", skl_ready_features.shape)
         skl_ready_train = SingleDatasetFragment(skl_ready_labels, skl_ready_features)
         # Prepare test subset.
         skl_ready_labels = np.array(self.test.labels)
