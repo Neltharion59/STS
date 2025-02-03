@@ -111,6 +111,4 @@ model_types = [
 ]
 # Typically, we only use one model at a time during optimization,
 # so if we want to optimize another model type, change it here.
-model_type_index = 2
-print(model_types[model_type_index]['name'])
-model_types = [model_types[model_type_index]]
+

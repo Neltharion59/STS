@@ -22,6 +22,7 @@ from evaluation.evaluate_regression_metrics import pearson
 from model_management.persistent_id_generator import PersistentIdGenerator
 from model_management.sts_model_pool import model_types
 from util.file_handling import write, exists, read
+from util.math import average
 
 
 path_to_optimizer_run_record_folder = os.path.join(root_path, 'resources/optimizer_runs/')
@@ -33,12 +34,12 @@ fitness_metric = {
     'name': 'pearson',
     'method': pearson
 }
-bee_count = 100
-iteration_cap = 100
+bee_count = 1
+iteration_cap = 1
 
 # Optimization run record object that will be persisted.
 algorithm_run = {
-    'run_id': 8,#PersistentIdGenerator('optimizer_run').next_id(),
+    'run_id': PersistentIdGenerator('optimizer_run').next_id(),
     'config': {
         'CV_fold_count': cross_validation_fold_count,
         'fitness_metric': fitness_metric['name'],
@@ -158,17 +159,17 @@ def solution_evaluator(vector):
         return 2
 
     # Determine the metric and the model best representing the configuration
-    metric_test_max = max(metric_values_test)
+    metric_test_avg = average(metric_values_test)
 
     # Calculating final fitness is simple
-    fitness = 1 - metric_test_max
+    fitness = 1 - metric_test_avg
 
     # If this model is the current best, let's save it
     if best_model is None or fitness < best_model['fitness']:
         best_model = {
             'inputs': [{'method_name': x['method_name'], 'args': x['args']} for x in inputs],
             'fitness': fitness,
-            'pearson': metric_test_max,
+            'pearson': metric_test_avg,
             'hyperparams': param_dict
         }
 
@@ -206,8 +207,6 @@ def run_optimization():
     # Record the model in the optimizer run record object.
     algorithm_run['main'][key][dataset.name]['models'][model_type['name']]['best_model'] = best_model
     algorithm_run['main'][key][dataset.name]['models'][model_type['name']]['fitness_history'] = cost
-
-print(model_types)
 
 # Try to load the optimizer run (if there is already a run with this ID)
 load_optimizer_run(algorithm_run['run_id'])
