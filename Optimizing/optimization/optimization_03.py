@@ -169,7 +169,7 @@ def solution_evaluator(vector):
     # If this model is the current best, let's save it
     if best_model is None or fitness < best_model['fitness']:
         best_model = {
-            'inputs': [{'method_name': x['method_name'], 'args': x['args']} for x in inputs],
+            'inputs': [{'method_name': x['method_name'], 'args': split_dataset_master.Train.features[sorted_method_group_names[i]][x['args_index']]['args']} for x in inputs],
             'fitness': fitness,
             'pearson': metric_test_avg,
             'hyperparams': param_dict
