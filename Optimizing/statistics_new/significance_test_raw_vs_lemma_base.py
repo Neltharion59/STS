@@ -15,9 +15,9 @@ def test_normality(sample, p_value):
 
 def test_right_higher(l_sample, r_sample, is_normal, p_value):
     if is_normal:
-        return 'student ttest', ttest_ind(l_sample, r_sample, alternative='less').pvalue > p_value
+        return 'student ttest', ttest_ind(l_sample, r_sample, alternative='greater').pvalue < p_value
     else:
-        return 'wilcox', mannwhitneyu(l_sample, r_sample, alternative='less').pvalue > p_value
+        return 'wilcox', mannwhitneyu(l_sample, r_sample, alternative='greater').pvalue < p_value
 
 
 def test_significance(left_sample, right_sample, p_value=0.05):

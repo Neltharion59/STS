@@ -7,6 +7,7 @@ from sklearn.linear_model import LinearRegression, BayesianRidge
 from sklearn.svm import SVR
 from sklearn.tree import DecisionTreeRegressor
 from sklearn.gaussian_process.kernels import *
+from xgboost import XGBRegressor
 
 # Prepare list of regression sklearn models to be added to pool
 model_types = [
@@ -94,6 +95,17 @@ model_types = [
             'min_samples_leaf': list(range(1, 30)),
             'max_features': ['auto', 'sqrt', 'log2', None],
             'max_leaf_nodes': list(range(2, 50))
+        }
+    },
+    {
+        "name": "xgboost",
+        "model": XGBRegressor,
+        "args": {
+            'max_depth': np.arange(3, 10),
+            'learning_rate': np.linspace(0.01, 0.3, 10),
+            'n_estimators': np.arange(100, 1000, 100),
+            'subsample': np.linspace(0.5, 1.0, 5),
+            'colsample_bytree': np.linspace(0.5, 1.0, 5)
         }
     }
 ]

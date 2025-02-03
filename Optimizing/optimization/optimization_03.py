@@ -38,7 +38,7 @@ iteration_cap = 100
 
 # Optimization run record object that will be persisted.
 algorithm_run = {
-    'run_id': PersistentIdGenerator('optimizer_run').next_id(),
+    'run_id': 8,#PersistentIdGenerator('optimizer_run').next_id(),
     'config': {
         'CV_fold_count': cross_validation_fold_count,
         'fitness_metric': fitness_metric['name'],
