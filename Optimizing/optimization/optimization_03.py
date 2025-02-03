@@ -29,13 +29,13 @@ path_to_optimizer_run_record_folder = os.path.join(root_path, 'resources/optimiz
 dataset_file_pattern = 'resources/split_datasets/split_dataset_{0}_{1}_sk.json'
 
 # Configuration - parameters of optimization
-cross_validation_fold_count = 2
+cross_validation_fold_count = 10
 fitness_metric = {
     'name': 'pearson',
     'method': pearson
 }
-bee_count = 1
-iteration_cap = 1
+bee_count = 50
+iteration_cap = 30
 
 # Optimization run record object that will be persisted.
 algorithm_run = {
