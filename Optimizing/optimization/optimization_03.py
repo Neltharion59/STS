@@ -127,7 +127,7 @@ def solution_evaluator(vector):
         if temp_vector[temp_vector_starting_index + i] < method_param_counts[i]:
             inputs.append({
                 'method_name': sorted_method_group_names[i],
-                'arg_index': temp_vector_starting_index + i
+                'arg_index': temp_vector[temp_vector_starting_index + i]
             })
 
     # Less than two features wouldn't make a very good model.
