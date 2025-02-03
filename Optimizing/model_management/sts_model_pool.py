@@ -101,11 +101,12 @@ model_types = [
         "name": "xgboost",
         "model": XGBRegressor,
         "args": {
-            'max_depth': np.arange(3, 10),
-            'learning_rate': np.linspace(0.01, 0.3, 10),
-            'n_estimators': np.arange(100, 1000, 100),
-            'subsample': np.linspace(0.5, 1.0, 5),
-            'colsample_bytree': np.linspace(0.5, 1.0, 5)
+            'booster': ['gbtree', 'gblinear', 'dart'],
+            'max_depth': np.arange(3, 10).tolist(),
+            'learning_rate': np.linspace(0.01, 0.3, 10).tolist(),
+            'n_estimators': np.arange(100, 1000, 100).tolist(),
+            'subsample': np.linspace(0.5, 1.0, 5).tolist(),
+            'colsample_bytree': np.linspace(0.5, 1.0, 5).tolist()
         }
     }
 ]
