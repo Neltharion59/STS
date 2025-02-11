@@ -136,6 +136,22 @@ class SingleDatasetFragment:
         self.labels = labels
         self.features = features
 
+    def produce_subset(self, inputs):
+        features = []
+
+        for x in inputs:
+            method_name = x['method_name']
+            arg_index = x['arg_index']
+            method_variations = self.features[method_name]
+            values = method_variations[arg_index]['values']
+            features.append(values)
+
+        transposed = [[list(row) for row in zip(*features)]]
+
+        subset = SingleDatasetFragment(self.labels, transposed)
+
+        return subset
+
 
 # Cure little class that conveniently wraps dataset split to train and test subset. To us, it is a single fold of CV.
 class SingleFoldDatasetFragment:

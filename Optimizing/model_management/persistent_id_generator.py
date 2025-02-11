@@ -1,6 +1,11 @@
 # Library-like script providing class for persistend ID management
+import os
+root_path = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
+import sys
+sys.path.append(root_path)
 
-id_folder_path = "./../resources/id_generator/"
+
+id_folder_path = os.path.join(root_path, "./resources/id_generator/")
 
 
 # Simple class providing utility of persistend unique ID generation.
